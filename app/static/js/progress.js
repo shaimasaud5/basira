@@ -2,7 +2,7 @@
 import { $, el, icon, show, fmt } from "./dom.js";
 import { hasContract } from "./input.js";
 
-const MEDIUM = 15, HIGH = 30;   // نفس عتبات الباك اند (report.py)، يحرسها اختبار
+const MEDIUM = 10, HIGH = 15;   // نفس عتبات الباك اند (report.py)، يحرسها اختبار
 const ACTIVITIES = ["مطعم", "كوفي", "صالة رياضية", "ورشة سيارات", "متجر", "صالون"];
 const CITIES = ["الرياض", "جدة", "الدمام", "مكة", "المدينة", "الخبر"];
 const SEV_LABEL = { high: "عالية", medium: "متوسطة", low: "منخفضة" };

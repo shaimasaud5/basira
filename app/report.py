@@ -8,8 +8,8 @@ from app.schemas import ProjectInput
 
 # عتبات الخطورة لنسبة الإيجار من الإيراد.
 # تنبيه: هذي اجتهاد منتج (مو رقم رسمي ولا معيار صناعة). عدّلها لو تبي.
-MEDIUM_RATIO_PCT = 15
-HIGH_RATIO_PCT = 30
+MEDIUM_RATIO_PCT = 10
+HIGH_RATIO_PCT = 15
 # سيناريو الضغط: لو الإيراد الفعلي أقل من التوقع بهالنسبة (افتراض للتوضيح فقط)
 STRESS_DROP_PCT = 20
 

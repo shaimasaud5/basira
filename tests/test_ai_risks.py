@@ -136,11 +136,11 @@ def test_overlapping_quotes_in_suggestions_are_merged(monkeypatch):
 
 def test_capped_at_max_cards(monkeypatch):
     items = [
-        risk(title=f"خطر {i}", quote=None, based_on=["monthly_rent"],
+        risk(title=f"خطر {'أبجدهوزحطيكلم'[i]}", quote=None, based_on=["monthly_rent"],
              recommendation="إيجارك 8,000 ريال ثابت، جهّز احتياطي لأشهر المبيعات الضعيفة.")
         for i in range(ai_risks.MAX_AI_CARDS + 3)
     ]
-    cards, rejected = run(monkeypatch, items)
+    cards, rejected = run(monkeypatch, items, text=None)
     assert len(cards) == ai_risks.MAX_AI_CARDS and rejected == 3
 
 
@@ -178,3 +178,32 @@ def test_report_puts_ai_cards_in_separate_section_below(monkeypatch):
     r = report.build_report([], [], None, cards)
     assert r["top"] == [] and len(r["ai_suggestions"]) == 1
     assert r["ai_suggestions"][0].trust_label == report.TRUST_AI
+
+
+def test_contract_present_requires_a_quote(monkeypatch):
+    cards, rejected = run(monkeypatch, [risk(quote=None, based_on=["monthly_rent"])])
+    assert cards == [] and rejected == 1
+
+
+def test_number_not_in_quote_or_data_is_rejected(monkeypatch):
+    cards, rejected = run(monkeypatch, [risk(recommendation="اطلب مهلة 30 يوماً بدل عشرة أيام لأن التأخر شائع.")])
+    assert cards == [] and rejected == 1
+
+
+def test_number_in_data_or_quote_is_accepted(monkeypatch):
+    cards, _ = run(monkeypatch, [risk(recommendation="إيجارك 8,000 ريال فاطلب مهلة سداد أطول من عشرة أيام.")])
+    assert len(cards) == 1
+
+
+@pytest.mark.parametrize("claim", ["هذا البند غير قانوني ويجب رفضه.", "يخالف أنظمة الإيجار المعمول بها."])
+def test_legal_claims_are_rejected(monkeypatch, claim):
+    cards, rejected = run(monkeypatch, [risk(why=claim)])
+    assert cards == [] and rejected == 1
+
+
+def test_longer_version_of_a_covered_clause_is_treated_as_covered(monkeypatch):
+    covered = ExtractedField(name="termination_penalty", value="x", quote=CLAUSE)
+    longer = f"المادة (7): {CLAUSE} وفق ما يحدده المؤجر"
+    facts = ContractFacts(fields={"termination_penalty": covered})
+    cards, rejected = run(monkeypatch, [risk(quote=longer)], text=CONTRACT.replace(CLAUSE, longer), facts=facts)
+    assert cards == [] and rejected == 1

@@ -1,5 +1,6 @@
 """سيرفر FastAPI: يربط التحقق والحسابات والتقرير."""
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, File, Request, UploadFile
@@ -7,7 +8,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.ai_risks import suggest_risks
+from app.ai_risks import accept_suggestions, request_suggestions
 from app.chat import ChatInput, answer
 from app.contract import extract_contract, looks_like_injection
 from app.contract_cards import contract_cards, contract_missing, effective_project
@@ -128,11 +129,20 @@ def analyze(project: ProjectInput):
                 "في النص عبارة تبدو كتعليمات موجّهة للنظام (مثل «تجاهل...»). "
                 "تجاهلناها، وراجع هذا البند في عقدك بنفسك."
             )
+        # الطلبان للموديل (استخراج بنود العقد + اقتراحات المخاطر) مستقلان، فنشغّلهم بالتوازي عشان نوفّر الوقت
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            extraction = pool.submit(extract_contract, clean_text)
+            suggestions = pool.submit(request_suggestions, project, clean_text)
+        suggestion_error: LLMError | None = None
         try:
-            facts = extract_contract(clean_text)
+            facts = extraction.result()
         except LLMError as e:
             # نكمل بالتقرير المالي ونبلّغ المستخدم، بدل ما نضيّع كل شي
             warnings.append(f"تعذّر تحليل العقد: {e}")
+        try:
+            raw_suggestions = suggestions.result()
+        except LLMError as e:
+            raw_suggestions, suggestion_error = None, e
 
     effective = effective_project(project, facts) if facts else project
     cards = financial_cards(effective)
@@ -142,9 +152,14 @@ def analyze(project: ProjectInput):
         missing += contract_missing(facts)
 
     ai_cards: list = []
-    if not warnings:  # لو الاتصال بالموديل فشل قبل شوي، ما نكرر المحاولة
+    if clean_text is not None:
+        if suggestion_error and not warnings:  # لو الاستخراج فشل قبل، ما نكرر التنبيه
+            warnings.append(f"تعذّر توليد الاقتراحات الإضافية: {suggestion_error}")
+        elif not warnings:
+            ai_cards, _ = accept_suggestions(raw_suggestions, effective, clean_text, facts)
+    elif not warnings:
         try:
-            ai_cards, _ = suggest_risks(effective, clean_text, facts, [c.title for c in cards])
+            ai_cards, _ = accept_suggestions(request_suggestions(effective, None), effective, None, None)
         except LLMError as e:
             warnings.append(f"تعذّر توليد الاقتراحات الإضافية: {e}")
     return build_report(cards, missing, notes + warnings, ai_cards, build_metrics(effective, facts))

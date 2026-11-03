@@ -228,3 +228,26 @@ def test_fabricated_quote_never_reaches_report(monkeypatch):
     monkeypatch.setattr(llm, "chat_json", lambda s, u: fake)
     body = client.post("/analyze", json=dict(CONTRACT_BODY, monthly_rent=8000)).json()
     assert not any("زيادة" in c["title"] or "يزيد" in c["title"] for c in body["top"] + body["more"])
+
+
+def test_analyze_runs_both_model_calls_in_parallel(monkeypatch):
+    """لو الطلبان تسلسليين، الحاجز ما يكتمل ويفشل الاختبار بالمهلة."""
+    import threading
+
+    from app import main as app_main
+    from app.contract import ContractFacts
+
+    barrier = threading.Barrier(2, timeout=5)
+
+    def fake_extract(text):
+        barrier.wait()
+        return ContractFacts()
+
+    def fake_request(project, text, *args, **kwargs):
+        barrier.wait()
+        return []
+
+    monkeypatch.setattr(app_main, "extract_contract", fake_extract)
+    monkeypatch.setattr(app_main, "request_suggestions", fake_request)
+    r = client.post("/analyze", json=CONTRACT_BODY)
+    assert r.status_code == 200 and r.json()["warnings"] == []
