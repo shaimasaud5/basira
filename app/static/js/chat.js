@@ -2,9 +2,9 @@
 import { $, el, icon, show, logoSvg } from "./dom.js";
 import * as api from "./api.js";
 
-const MAX_HISTORY = 6;
-const WELCOME_GUIDE = "هلا! أنا بصِيـــرة. اسألني إذا حاب عن طريقة الاستخدام، وبعد ما ترفع عقدك أقدر أساعدك بالتحليل وأجاوبك من تقريرك وعقدك.";
-const WELCOME_REPORT = "جاهز! حلّلت مشروعك وعقدك. اسألني عن أي بند، أو اضغط «اسأل بصِيـــرة» على أي خطر في التقرير.";
+const MAX_HISTORY = 10;
+const WELCOME_GUIDE = "هلا! أنا بصِيـــرة، مساعدك في عقد إيجار مشروعك. اسألني عن أي شي في العقود، وإذا رفعت عقدك أحلله لك وأجاوبك من بنوده.";
+const WELCOME_REPORT = "خلصت من عقدك. اسألني عن أي بند، أو كيف تفاوض المؤجر، أو اضغط «اسأل بصِيـــرة» على أي خطر في التقرير.";
 const GUIDE_CHIPS = ["وش أحتاج أجهّز؟", "وش الملفات المدعومة؟", "هل عقدي يتخزن؟"];
 const REPORT_CHIPS = ["وش أخطر بند في تقريري؟", "كيف أفاوض على الزيادة؟", "وش أسأل المؤجر قبل التوقيع؟"];
 
@@ -57,10 +57,10 @@ function typingBubble() {
   return msg;
 }
 
-function renderSuggestions() {
+function renderSuggestions(custom = []) {
   const box = $("suggest");
   box.replaceChildren();
-  (chat.context ? REPORT_CHIPS : GUIDE_CHIPS).forEach((q) => {
+  (custom.length ? custom : chat.context ? REPORT_CHIPS : GUIDE_CHIPS).forEach((q) => {
     const b = el("button", "", q);
     b.type = "button";
     b.addEventListener("click", () => ask(q));
@@ -105,9 +105,10 @@ export async function ask(question) {
   });
   typing.remove();
   if (result.ok) {
-    const { answer, verified_quote: quote, label } = result.data;
+    const { answer, verified_quote: quote, label, suggestions = [] } = result.data;
     addMessage("bot", answer, { quote, label, animate: true });
     chat.history.push({ role: "user", content: question }, { role: "assistant", content: answer });
+    renderSuggestions(suggestions);
   } else {
     addMessage("error", result.errors[0]);
   }

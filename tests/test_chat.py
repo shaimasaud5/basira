@@ -76,9 +76,9 @@ def test_question_report_and_contract_go_in_user_message_not_system(monkeypatch)
 
 def test_history_is_trimmed_to_last_turns(monkeypatch):
     seen = fake(monkeypatch, {"answer": "ok"})
-    history = [{"role": "user" if i % 2 == 0 else "assistant", "content": f"رسالة {i}"} for i in range(10)]
+    history = [{"role": "user" if i % 2 == 0 else "assistant", "content": f"رسالة {i}"} for i in range(14)]
     client.post("/chat", json=body(history=history))
-    assert "رسالة 9" in seen["user"] and "رسالة 0" not in seen["user"]
+    assert "رسالة 13" in seen["user"] and "رسالة 0" not in seen["user"]
 
 
 @pytest.mark.parametrize("payload, expected", [
@@ -143,3 +143,63 @@ def test_chat_content_never_logged(monkeypatch, caplog):
         client.post("/chat", json=body(question="سؤال سري 9191", contract_text=CONTRACT, consent=True))
     assert "9191" not in caplog.text and "4242" not in caplog.text and "يزداد" not in caplog.text
     assert "question_len=" in caplog.text
+
+
+def test_followups_are_returned_cleaned_and_capped(monkeypatch):
+    fake(monkeypatch, {"answer": "ok", "followups": [" كيف أفاوض؟ ", "كيف أفاوض؟", "", 5, "س" * 80, "وش أسأل المؤجر؟", "ثالث", "رابع"]})
+    out = client.post("/chat", json=body()).json()
+    assert out["suggestions"] == ["كيف أفاوض؟", "وش أسأل المؤجر؟", "ثالث"]
+
+
+def test_followups_missing_gives_empty_list_in_both_modes(monkeypatch):
+    fake(monkeypatch, {"answer": "ok"})
+    assert client.post("/chat", json=body()).json()["suggestions"] == []
+    assert client.post("/chat", json={"question": "سؤال"}).json()["suggestions"] == []
+
+
+def test_prompts_keep_the_assistant_in_its_lane():
+    for prompt in (chat.SYSTEM_PROMPT, chat.GUIDE_PROMPT):
+        assert "خارج ذلك" in prompt and "رأي قانوني" in prompt and "أنت «بصيرة»" in prompt
+
+
+def test_invented_numbers_trigger_one_retry_with_feedback(monkeypatch):
+    calls = []
+
+    def chat_json(system, user):
+        calls.append(user)
+        return {"answer": "راح تخسر 600 ألف."} if len(calls) == 1 else {"answer": "الزيادة 10% كل سنة."}
+
+    monkeypatch.setattr(llm, "chat_json", chat_json)
+    out = client.post("/chat", json=body(contract_text=CONTRACT, consent=True)).json()
+    assert len(calls) == 2 and "600" in calls[1] and out["answer"] == "الزيادة 10% كل سنة."
+
+
+def test_ungrounded_sentence_is_dropped_even_after_retry_and_example_numbers_stay(monkeypatch):
+    fake(monkeypatch, {"answer": "الزيادة 10% كل سنة. يعني 700 ألف. اطلب سقفاً مثلاً 5%."})
+    out = client.post("/chat", json=body(contract_text=CONTRACT, consent=True)).json()
+    assert "700" not in out["answer"] and "10%" in out["answer"] and "مثلاً 5%" in out["answer"]
+
+
+def test_egyptian_dialect_triggers_retry_and_bad_followups_are_dropped(monkeypatch):
+    seen = []
+
+    def chat_json(system, user):
+        seen.append(user)
+        if len(seen) == 1:
+            return {"answer": "هتخسر مبلغ كبير."}
+        return {"answer": "بتخسر مبلغ كبير.", "followups": ["إزاي أوفر؟", "كيف أفاوض؟"]}
+
+    monkeypatch.setattr(llm, "chat_json", chat_json)
+    out = client.post("/chat", json=body()).json()
+    assert len(seen) == 2 and out["answer"] == "بتخسر مبلغ كبير." and out["suggestions"] == ["كيف أفاوض؟"]
+
+
+def test_foreign_script_triggers_retry(monkeypatch):
+    seen = []
+
+    def chat_json(system, user):
+        seen.append(user)
+        return {"answer": "قد تُ增加 نفقاتك."} if len(seen) == 1 else {"answer": "قد تزيد نفقاتك."}
+
+    monkeypatch.setattr(llm, "chat_json", chat_json)
+    assert client.post("/chat", json=body()).json()["answer"] == "قد تزيد نفقاتك." and len(seen) == 2
