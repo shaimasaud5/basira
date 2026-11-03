@@ -50,8 +50,11 @@ SYSTEM_PROMPT = """أنت محلل مخاطر لرائد أعمال سعودي �
 - ممنوع تكرار المواضيع في already_covered حتى لو بصياغة مختلفة.
 - title محدد من 2 إلى 6 كلمات يصف البند نفسه (مثل «الإخلاء لإعادة التطوير بدون تعويض»)، لا عنوان عام مثل «التزامات».
 - severity: high فقط لو البند قد يسبب خسارة كبيرة أو فورية (مثل إخلاء بدون تعويض)، medium لو التزام مالي أو شرط متكرر، low للباقي.
-- recommendation خاصة بحالة المستخدم وتشير لبند العقد، وممنوع النصائح العامة مثل "راجع العقد بعناية".
-- حد أقصى 8 مخاطر. إذا ما لقيت شي مفيد أرجع {"risks": []}."""
+- recommendation خطوة عملية محددة تبدأ بفعل (اطلب، فاوض، اسأل، وثّق) وتذكر كلمات من البند نفسه. ممنوع القوالب العامة مثل
+  «التأكد من شروط...» أو «راجع العقد بعناية».
+  شكل التوصية الجيدة (مثال لبند غير موجود في عقد المستخدم، لا تنسخه): «اطلب تحديد ساعات العمل بالعقد، لأن البند يسمح
+  للمؤجر بتغييرها بإشعار قصير».
+- لا تقترح أكثر من 6 مخاطر، ولا تكرر نفس الجملة في أكثر من خطر. اختر الأهم فقط. إذا ما لقيت شي مفيد أرجع {"risks": []}."""
 
 _WORDS = re.compile(r"[؀-ۿA-Za-z]+")
 
@@ -63,6 +66,19 @@ def _two_word_overlap(recommendation: str, quote: str) -> bool:
     return any(f"{a} {b}" in rec for a, b in zip(words, words[1:]))
 
 
+def _stems(text: str) -> set[str]:
+    """جذوع تقريبية (أول 4 حروف بعد حذف أل التعريف) للكلمات الطويلة، لمقارنة التوصية بالبند."""
+    stems = set()
+    for word in _WORDS.findall(normalize(text)):
+        for prefix in ("وال", "بال", "لل", "ال"):
+            if word.startswith(prefix) and len(word) - len(prefix) >= 4:
+                word = word[len(prefix):]
+                break
+        if len(word) >= 4:
+            stems.add(word[:4])
+    return stems
+
+
 def _is_specific(recommendation: str, quote: str | None, data_values: list[str]) -> bool:
     """فحص تقريبي (مو فهم للمعنى): طول كافي + رقم أو إشارة لبند العقد أو لبيانات المستخدم."""
     rec = normalize(recommendation)
@@ -70,7 +86,7 @@ def _is_specific(recommendation: str, quote: str | None, data_values: list[str])
         return False
     if any(ch.isdigit() for ch in rec):
         return True
-    if quote and _two_word_overlap(recommendation, quote):
+    if quote and (_two_word_overlap(recommendation, quote) or _stems(recommendation) & _stems(quote)):
         return True
     return any(v and normalize(v) in rec for v in data_values)
 

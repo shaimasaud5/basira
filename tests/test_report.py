@@ -31,9 +31,9 @@ def test_stress_scenario_is_computed():
 def test_severity_thresholds():
     def sev(rent):
         return financial_cards(project(monthly_rent=rent, monthly_revenue=10000))[0].severity
-    assert sev(1000) == "low"
-    assert sev(1500) == "medium"   # 15% بالضبط
-    assert sev(3000) == "high"     # 30% بالضبط
+    assert sev(900) == "low"
+    assert sev(1000) == "medium"   # 10% بالضبط
+    assert sev(1500) == "high"     # 15% بالضبط
 
 
 def test_total_rent_card_needs_months():

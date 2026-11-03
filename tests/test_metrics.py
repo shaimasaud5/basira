@@ -23,7 +23,7 @@ def test_full_metrics():
     assert m["rent_to_revenue_pct"] == 20 and m["total_commitment"] == 192000
     assert m["rent_after_increase"] == 8400 and m["monthly_extra_after_increase"] == 400
     assert m["yearly_extra_after_increase"] == 4800 and m["increase_pct"] == 5
-    assert m["ratio_thresholds"] == {"medium": 15, "high": 30}
+    assert m["ratio_thresholds"] == {"medium": 10, "high": 15}
 
 
 def test_missing_inputs_give_none_not_zero():
