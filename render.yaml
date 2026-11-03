@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: entrepreneur-advisor
+    runtime: python
+    plan: free   # الخطة المجانية (تنام بعد فترة خمول وتصحى بأول زيارة)
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips='*'
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.0
+      - key: LLM_MODEL
+        value: meta-llama/llama-3.3-70b-instruct
+      - key: LLM_API_KEY
+        sync: false   # تحطينه يدوياً من لوحة Render، ما يُكتب هنا
