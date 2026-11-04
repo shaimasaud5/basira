@@ -203,3 +203,10 @@ def test_foreign_script_triggers_retry(monkeypatch):
 
     monkeypatch.setattr(llm, "chat_json", chat_json)
     assert client.post("/chat", json=body()).json()["answer"] == "قد تزيد نفقاتك." and len(seen) == 2
+
+
+def test_prompts_force_arabic_only_and_foreign_followups_are_dropped(monkeypatch):
+    for prompt in (chat.SYSTEM_PROMPT, chat.GUIDE_PROMPT):
+        assert "بالعربية فقط" in prompt and "صينية" in prompt
+    fake(monkeypatch, {"answer": "ok", "followups": ["كيف أفاوض 谈判؟", "وش البنود؟", "Привет"]})
+    assert client.post("/chat", json=body()).json()["suggestions"] == ["وش البنود؟"]

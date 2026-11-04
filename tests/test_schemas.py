@@ -17,10 +17,10 @@ def test_minimal_valid_input():
 
 def test_full_valid_input_converts_strings_to_numbers():
     p = ProjectInput(
-        activity="كوفي", city="الرياض", employees="3",
+        activity="كوفي", city="الرياض",
         monthly_rent="8000", monthly_revenue="40000", lease_months="24",
     )
-    assert p.employees == 3 and p.monthly_rent == 8000.0 and p.lease_months == 24
+    assert p.monthly_rent == 8000.0 and p.lease_months == 24
 
 
 def test_empty_input_reports_both_required_fields():
@@ -33,8 +33,8 @@ def test_whitespace_only_is_empty():
 
 
 def test_blank_optional_fields_become_none():
-    p = ProjectInput(activity="كوفي", city="جدة", monthly_rent="", district="  ")
-    assert p.monthly_rent is None and p.district is None
+    p = ProjectInput(activity="كوفي", city="جدة", monthly_rent="")
+    assert p.monthly_rent is None
 
 
 def test_non_numeric_rent():
@@ -49,8 +49,8 @@ def test_non_positive_numbers_rejected(field, bad):
     assert errors_of(activity="كوفي", city="جدة", **{field: bad})
 
 
-def test_fractional_employees_rejected():
-    assert errors_of(activity="كوفي", city="جدة", employees="2.5")
+def test_fractional_lease_months_rejected():
+    assert errors_of(activity="كوفي", city="جدة", lease_months="2.5")
 
 
 def test_contract_requires_consent():

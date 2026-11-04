@@ -4,7 +4,7 @@ import * as api from "./api.js";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 const REDACTION_LABELS = { mobile: "جوال", iban: "آيبان", national_id: "هوية أو إقامة", email: "إيميل" };
-const FIELDS = ["activity", "city", "monthly_rent", "monthly_revenue", "lease_months", "employees", "district", "location_type"];
+const FIELDS = ["activity", "city", "monthly_rent", "monthly_revenue", "lease_months"];
 
 const input = { fileName: "", previewText: "" };   // الحالة بالذاكرة فقط
 const notify = () => document.dispatchEvent(new Event("bassira:input"));

@@ -61,8 +61,8 @@ def test_no_evidence_is_rejected(monkeypatch):
 
 
 def test_based_on_with_unknown_or_empty_keys_is_rejected(monkeypatch):
-    cards, _ = run(monkeypatch, [risk(quote=None, based_on=["district", "nonsense"])], text=None)
-    assert cards == []  # الحي ما أُدخل والمفتاح الثاني غير معروف
+    cards, _ = run(monkeypatch, [risk(quote=None, based_on=["employees", "nonsense"])], text=None)
+    assert cards == []  # المفتاحان غير معروفين
 
 
 @pytest.mark.parametrize("rec", [

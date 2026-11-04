@@ -137,8 +137,6 @@ svg.i { width: 1.25em; height: 1.25em; flex: none; vertical-align: -0.2em; }
 .field input, .preview textarea { width: 100%; min-height: 46px; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--line-strong); background: var(--surface-2); }
 .field input::placeholder { color: var(--ink-3); opacity: .8; }
 .field input:focus { background: var(--surface); }
-details.more { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 10px; }
-details.more summary { cursor: pointer; font-weight: 700; color: var(--brand); padding: 6px 0; }
 
 .dropzone { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 28px 16px; border-radius: var(--radius);
   border: 2px dashed var(--line-strong); background: var(--surface-2); cursor: pointer; transition: border-color .15s, background .15s; }

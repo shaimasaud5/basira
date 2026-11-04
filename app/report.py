@@ -109,10 +109,6 @@ def missing_info(p: ProjectInput) -> list[str]:
         questions.append("كم مدة العقد بالشهور؟")
     if not p.contract_text:
         questions.append("ارفع عقد الإيجار (PDF أو Word) لنحلل بنوده.")
-    if not p.location_type:
-        questions.append("وش نوع الموقع (مجمع، شارع تجاري، ...)؟")
-    if p.employees is None:
-        questions.append("كم عدد الموظفين؟")
     return questions
 
 

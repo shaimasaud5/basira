@@ -29,9 +29,6 @@ def _number(value, label: str, integer: bool = False):
 class ProjectInput(BaseModel):
     activity: str = Field(default="", validate_default=True)
     city: str = Field(default="", validate_default=True)
-    district: str | None = None
-    location_type: str | None = None
-    employees: int | None = None
     monthly_rent: float | None = None
     monthly_revenue: float | None = None
     lease_months: int | None = None
@@ -53,19 +50,6 @@ class ProjectInput(BaseModel):
         if v is None:
             raise ValueError("المدينة مطلوبة.")
         return v
-
-    @field_validator("district", "location_type", mode="before")
-    @classmethod
-    def _optional_text(cls, v):
-        return _blank_to_none(v)
-
-    @field_validator("employees", mode="before")
-    @classmethod
-    def _employees(cls, v):
-        n = _number(v, "عدد الموظفين", integer=True)
-        if n is not None and n < 0:
-            raise ValueError("عدد الموظفين لازم يكون صفر أو أكثر.")
-        return n
 
     @field_validator("monthly_rent", mode="before")
     @classmethod

@@ -21,9 +21,6 @@ ALLOWED_SEVERITIES = {"high", "medium", "low"}
 DATA_LABELS = {
     "activity": "النشاط",
     "city": "المدينة",
-    "district": "الحي",
-    "location_type": "نوع الموقع",
-    "employees": "عدد الموظفين",
     "monthly_rent": "الإيجار الشهري",
     "monthly_revenue": "الإيراد الشهري المتوقع",
     "lease_months": "مدة العقد بالشهور",
