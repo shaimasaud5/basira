@@ -146,7 +146,7 @@ python -m pytest -q
 | المتغير | الوصف |
 |---|---|
 | `LLM_API_KEY` | مفتاح مزوّد الموديل. لا يُرفع على git. |
-| `LLM_MODEL` | اسم الموديل. الافتراضي `meta-llama/llama-3.3-70b-instruct`. |
+| `LLM_MODEL` | اسم الموديل. الافتراضي `meta-llama/llama-3.3-70b-instruct:nitro` (اللاحقة `:nitro` تختار المزوّد الأسرع في OpenRouter). |
 | `LLM_BASE` | عنوان الواجهة. الافتراضي OpenRouter (`https://openrouter.ai/api/v1`). |
 
 > **Llama هو الموديل الرئيسي** (Llama 3.3 70B عبر OpenRouter). Groq سحب `llama-3.3-70b-versatile` في أغسطس 2026،

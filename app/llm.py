@@ -15,7 +15,7 @@ logger = logging.getLogger("app.llm")
 
 OPENROUTER_BASE = "https://openrouter.ai/api/v1"
 GROQ_BASE = "https://api.groq.com/openai/v1"
-DEFAULT_MODEL = "meta-llama/llama-3.3-70b-instruct"   # Llama هو الموديل الرئيسي للمشروع
+DEFAULT_MODEL = "meta-llama/llama-3.3-70b-instruct:nitro"   # Llama هو الموديل الرئيسي؛ :nitro يوجّه للمزوّد الأسرع (تحليل 3 ثواني بدل 27)
 LEGACY_GROQ_MODEL = "openai/gpt-oss-120b"
 TIMEOUT_SECONDS = 60
 MAX_TOKENS = 4000  # كبير نسبياً لأن موديلات التفكير تستهلك جزء منه في التفكير

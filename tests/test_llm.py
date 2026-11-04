@@ -116,7 +116,7 @@ def test_llm_vars_default_to_llama_on_openrouter(monkeypatch):
     monkeypatch.setenv("LLM_API_KEY", "sk-or-fake")
     calls = patch_post(monkeypatch, FakeResponse())
     llm.chat_json("s", "u")
-    assert calls[0]["json"]["model"] == "meta-llama/llama-3.3-70b-instruct"
+    assert calls[0]["json"]["model"] == "meta-llama/llama-3.3-70b-instruct:nitro"
     assert calls[0]["url"] == "https://openrouter.ai/api/v1/chat/completions"
     assert calls[0]["headers"]["Authorization"] == "Bearer sk-or-fake"
 
