@@ -197,7 +197,7 @@ function riskCard(card, isAi, openDetail) {
   return box;
 }
 
-/** نافذة التفاصيل: ليش هو خطر، وش أسوي، الدليل من العقد. */
+/** نافذة التفاصيل: ليش هو خطر، توصيتي لك، الدليل من العقد. */
 function detailDialog(onAsk) {
   const dlg = el("dialog", "risk-dialog");
   dlg.setAttribute("aria-label", "تفاصيل الخطر");
@@ -222,7 +222,7 @@ function detailDialog(onAsk) {
     const why = el("section", "dlg-block");
     why.append(el("h4", "", "ليش هو خطر"), el("p", "", card.why));
     const act = el("section", "dlg-block act");
-    act.append(el("h4", "", "وش أسوي"), el("p", "", card.recommendation));
+    act.append(el("h4", "", "توصيتي لك"), el("p", "", card.recommendation));
     const proof = el("section", "dlg-block");
     proof.append(el("h4", "", "الدليل"), el("blockquote", "evidence", card.evidence));
 
