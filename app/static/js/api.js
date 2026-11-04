@@ -28,7 +28,3 @@ export function previewFile(file) {
   return send("/contract/preview", { method: "POST", body: form });
 }
 
-export async function demoContracts() {
-  const result = await send("/demo-contracts");
-  return result.ok ? result.data : [];
-}

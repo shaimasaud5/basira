@@ -23,12 +23,6 @@ from app.schemas import ProjectInput, RedactInput
 logger = logging.getLogger("app")
 
 BASE_DIR = Path(__file__).parent
-DATA_DIR = BASE_DIR.parent / "data"
-DEMO_TITLES = {
-    "01_complete.txt": "عقد كامل البنود",
-    "02_missing_clauses.txt": "عقد ناقص بنود",
-    "03_tricky_clauses.txt": "عقد فيه بنود مخادعة",
-}
 
 app = FastAPI(title="بصيرة")
 
@@ -63,13 +57,6 @@ app.mount("/static", RevalidatingStaticFiles(directory=BASE_DIR / "static"), nam
 @app.get("/", include_in_schema=False)
 def index():
     return FileResponse(BASE_DIR / "static" / "index.html", headers={"Cache-Control": "no-cache"})
-
-
-@app.get("/demo-contracts")
-def demo_contracts():
-    """العقود التجريبية للعرض (نصوص وهمية كتبناها، مو بيانات مستخدمين)."""
-    files = sorted((DATA_DIR / "demo_contracts").glob("*.txt"))
-    return [{"name": DEMO_TITLES.get(f.name, f.stem), "text": f.read_text(encoding="utf-8")} for f in files]
 
 
 @app.get("/health")

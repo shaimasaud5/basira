@@ -119,12 +119,6 @@ def test_every_module_imported_by_main_exists():
         assert client.get(f"/static/js/{rel}.js").status_code == 200
 
 
-def test_demo_contracts_endpoint():
-    body = client.get("/demo-contracts").json()
-    assert len(body) == 3 and all(d["name"] and d["text"] for d in body)
-    assert {d["name"] for d in body} == {"عقد كامل البنود", "عقد ناقص بنود", "عقد فيه بنود مخادعة"}
-
-
 def test_analyze_returns_report_with_cards():
     r = client.post(
         "/analyze",

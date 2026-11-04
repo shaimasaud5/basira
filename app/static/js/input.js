@@ -136,15 +136,6 @@ async function handleFile(file) {
   renderPreview(result.data);
 }
 
-async function handleDemo(demo) {
-  showErrors([]);
-  beginFile(`${demo.name} (تجريبي)`);
-  const result = await api.redactText(demo.text);
-  if (!result.ok) { resetFile(); showErrors(result.errors); return; }
-  $("file-state").textContent = "عقد تجريبي وهمي · جاهز للتحليل";
-  renderPreview(result.data);
-}
-
 function payload() {
   const body = Object.fromEntries(FIELDS.map((id) => [id, $(id).value.trim()]));
   const text = $("preview-text").value.trim();
@@ -172,20 +163,6 @@ export async function initInput({ onSubmit }) {
   $("file-input").addEventListener("change", (ev) => { const f = ev.target.files[0]; if (f) handleFile(f); });
   $("file-remove").addEventListener("click", resetFile);
   $("preview-text").addEventListener("input", () => { input.previewText = $("preview-text").value; drawSummary(); notify(); });
-
-  // عقود تجريبية (اختيارية، للعرض)
-  const demos = await api.demoContracts();
-  $("demo-open").addEventListener("click", () => {
-    const list = $("demo-list");
-    if (list.childElementCount) { list.replaceChildren(); return; }
-    demos.forEach((d) => {
-      const b = el("button", "", d.name);
-      b.type = "button";
-      b.addEventListener("click", () => { list.replaceChildren(); handleDemo(d); });
-      list.append(" · ", b);
-    });
-  });
-  if (!demos.length) show($("demo-open").parentElement, false);
 
   $("analyze").addEventListener("click", async () => {
     showErrors([]);
