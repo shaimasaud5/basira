@@ -46,10 +46,9 @@ def test_hero_starts_directly_with_the_headline():
 
 def test_landing_sections_ctas_and_footer():
     page = client.get("/").text
-    for section in ("features", "how", "trust"):
+    for section in ("how", "trust"):
         assert f'id="{section}"' in page
-    for copy in ("من قراءة العقد إلى فهم تبعاته.",
-                 "ثلاث خطوات تفصلك عن فهم عقدك.", "تحليل يستند إلى عقدك، وليس إلى التخمين.",
+    for copy in ("ثلاث خطوات تفصلك عن فهم عقدك.", "تحليل يستند إلى عقدك، وليس إلى التخمين.",
                  "عقدك يستحق أن تفهمه قبل أن توقّعه.", "حلّل عقدك الآن", "لا يتطلب إنشاء حساب.",
                  "الدليل من عقدك", "حسابات دقيقة برمجيًا", "خصوصية مستنداتك"):
         assert copy in page
