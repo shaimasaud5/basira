@@ -980,3 +980,9 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 .lp-footer .logo-mark { height: 30px; }
 .lp-footer .brand-name { font-size: 1.5rem; }
 .lp-footer .lp-disclaimer { margin: 10px 0 0; font-size: .8rem; line-height: 1.7; }
+
+/* فواصل واضحة بين الأقسام: خلفيات متناوبة + خطوط رفيعة */
+.lp-hero { border-bottom: 1px solid var(--line); }
+.lp-plain { background: var(--bg); border-bottom: 1px solid var(--line); }
+.lp-alt { background: var(--surface-2); border-block: 1px solid var(--line); }
+.lp-cta { margin-top: 0; }
