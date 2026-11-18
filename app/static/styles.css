@@ -872,3 +872,6 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 .lp-bento .lp-card h3 { margin: 2px 0 6px; font-size: 1.15rem; }
 .lp-bento .b3 h3 { font-size: 1.15rem; }
 @media (max-width: 640px) { .lp-bento { grid-template-columns: 1fr; } }
+
+/* المثال: بدون وسم الفئة وبدون علامة «موثّق» */
+.lp-demo .rcard .pill.cat, .lp-demo .rcard .trust { display: none; }
