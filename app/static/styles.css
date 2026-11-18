@@ -916,3 +916,10 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 .lp-evidence { margin: 0; padding: 14px 16px; border-inline-start: 3px solid var(--brand); background: var(--brand-050); border-radius: 10px; font-size: .95rem; line-height: 1.9; color: var(--ink); }
 .lp-formula { display: flex; flex-direction: column; gap: 4px; font-size: 1rem; }
 .lp-formula span { white-space: nowrap; }
+
+/* المميزات: خمس بطاقات (3 ثم 2 في الوسط) */
+.lp-feats { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+.lp-feat { flex: 0 1 calc((100% - 36px) / 3); min-width: 260px; padding: 28px 24px; }
+.lp-feat h3 { margin: 18px 0 8px; font-size: 1.2rem; }
+.lp-feat p { font-size: 1rem; }
+@media (max-width: 700px) { .lp-feat { flex-basis: 100%; min-width: 0; } }
