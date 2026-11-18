@@ -18,7 +18,7 @@ JS_MODULES = ["main", "api", "chat", "dashboard", "dom", "input", "progress"]
 def test_landing_is_arabic_rtl_with_the_chosen_copy():
     page = client.get("/").text
     assert 'dir="rtl"' in page and "بصِيـــرة" in page
-    assert "قبل ما توقّع عقد الإيجار" in page
+    assert "قبل ما توقّع عقد الإيجار" not in page   # الجملة التمهيدية انحذفت
     assert "لا تلتزم بعقد قبل ما تعرف" in page and "وش يترتب عليه." in page
     assert "ابدأ تحليل عقدك" in page and "اكتشف كيف تعمل بصيرة" in page
     assert "قراءة أولية وليست استشارة قانونية" not in page
@@ -39,9 +39,9 @@ def test_landing_background_uses_the_animated_logo_not_the_eye():
     assert 'rel="icon"' in page and "/static/logo.svg" in page
 
 
-def test_eyebrow_is_plain_text_without_icon():
+def test_hero_starts_directly_with_the_headline():
     page = client.get("/").text
-    assert '<span class="eyebrow">قبل ما توقّع عقد الإيجار</span>' in page
+    assert 'class="eyebrow"' not in page and '<h1>لا تلتزم بعقد قبل ما تعرف' in page
 
 
 def test_landing_sections_ctas_and_footer():
