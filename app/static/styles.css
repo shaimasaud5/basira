@@ -1018,3 +1018,25 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 @media (max-width: 960px) { .chips button { min-height: 40px; padding: 6px 16px; } .chips { gap: 8px; } }
 
 @media (max-width: 1000px) { #features .lp-feats { scrollbar-width: none; } #features .lp-feats::-webkit-scrollbar { display: none; } }
+
+/* كيف تعمل: حركة متكررة، الخطوات تظهر بالتتابع ثم تختفي وتعيد */
+@keyframes stepLoop {
+  0% { opacity: 0; transform: translateY(18px); }
+  9%, 72% { opacity: 1; transform: none; }
+  88%, 100% { opacity: 0; transform: translateY(-8px); }
+}
+@keyframes lineLoop {
+  0% { transform: scaleX(0); opacity: 1; }
+  34%, 72% { transform: scaleX(1); opacity: 1; }
+  88%, 100% { transform: scaleX(1); opacity: 0; }
+}
+.lp-js .lp-step.lp-reveal.in { animation: stepLoop 9s ease-in-out infinite; transition: none; }
+.lp-js .lp-steps .lp-step:nth-child(1).in { animation-delay: 0s; }
+.lp-js .lp-steps .lp-step:nth-child(2).in { animation-delay: 1.2s; }
+.lp-js .lp-steps .lp-step:nth-child(3).in { animation-delay: 2.4s; }
+@supports selector(:has(*)) {
+  .lp-js .lp-steps:has(.lp-step.in)::before { animation: lineLoop 9s ease-in-out infinite; transition: none; transform-origin: right center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-js .lp-step.lp-reveal.in, .lp-js .lp-steps:has(.lp-step.in)::before { animation: none; opacity: 1; transform: none; }
+}
