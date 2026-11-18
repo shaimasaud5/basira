@@ -53,7 +53,7 @@ def settings() -> tuple[str, str, str]:
     return base.rstrip("/"), key, model
 
 
-def _call(system: str, user: str, base: str, key: str, model: str, json_mode: bool = True) -> tuple[int, str]:
+def _call(system: str, user: str, base: str, key: str, model: str, json_mode: bool = True, temperature: float = 0) -> tuple[int, str]:
     """يرجّع (رمز الحالة، النص). json_mode يطلب JSON من المزوّد مباشرة (بعض المزودين ما يدعمه)."""
     body = {
         "model": model,
@@ -61,7 +61,7 @@ def _call(system: str, user: str, base: str, key: str, model: str, json_mode: bo
             {"role": "system", "content": system},
             {"role": "user", "content": user},
         ],
-        "temperature": 0,
+        "temperature": temperature,
         "max_tokens": MAX_TOKENS,
     }
     if json_mode:
@@ -98,7 +98,7 @@ def _call(system: str, user: str, base: str, key: str, model: str, json_mode: bo
         return 200, ""
 
 
-def chat_json(system: str, user: str) -> dict:
+def chat_json(system: str, user: str, temperature: float = 0) -> dict:
     """يرسل طلب للموديل ويرجّع الرد كـ dict. يعيد المحاولة مرة وحدة لو الـ JSON غير صالح."""
     base, key, model = settings()
     if not key or key == "your_key_here":
@@ -107,7 +107,7 @@ def chat_json(system: str, user: str) -> dict:
     json_mode = True
     attempts = 0
     while attempts <= JSON_RETRIES:
-        status, content = _call(system, user, base, key, model, json_mode)
+        status, content = _call(system, user, base, key, model, json_mode, temperature)
         if status == 400 and json_mode:
             json_mode = False   # المزوّد رفض response_format: نعيد بدونه (ما يحسب كمحاولة)
             logger.warning("llm: provider rejected response_format, retrying without it")

@@ -11,7 +11,7 @@ def no_real_llm_calls(request, monkeypatch):
     """
     if request.module.__name__.endswith("test_llm"):
         return
-    monkeypatch.setattr(llm, "chat_json", lambda system, user: {})
+    monkeypatch.setattr(llm, "chat_json", lambda system, user, temperature=0: {})
 
 
 @pytest.fixture(autouse=True)

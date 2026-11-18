@@ -19,7 +19,7 @@ def body(**kw):
 def fake(monkeypatch, response):
     seen = {}
 
-    def chat_json(system, user):
+    def chat_json(system, user, temperature=0):
         seen["system"], seen["user"] = system, user
         if isinstance(response, Exception):
             raise response
@@ -165,7 +165,7 @@ def test_prompts_keep_the_assistant_in_its_lane():
 def test_invented_numbers_trigger_one_retry_with_feedback(monkeypatch):
     calls = []
 
-    def chat_json(system, user):
+    def chat_json(system, user, temperature=0):
         calls.append(user)
         return {"answer": "راح تخسر 600 ألف."} if len(calls) == 1 else {"answer": "الزيادة 10% كل سنة."}
 
@@ -183,7 +183,7 @@ def test_ungrounded_sentence_is_dropped_even_after_retry_and_example_numbers_sta
 def test_egyptian_dialect_triggers_retry_and_bad_followups_are_dropped(monkeypatch):
     seen = []
 
-    def chat_json(system, user):
+    def chat_json(system, user, temperature=0):
         seen.append(user)
         if len(seen) == 1:
             return {"answer": "هتخسر مبلغ كبير."}
@@ -197,7 +197,7 @@ def test_egyptian_dialect_triggers_retry_and_bad_followups_are_dropped(monkeypat
 def test_foreign_script_triggers_retry(monkeypatch):
     seen = []
 
-    def chat_json(system, user):
+    def chat_json(system, user, temperature=0):
         seen.append(user)
         return {"answer": "قد تُ增加 نفقاتك."} if len(seen) == 1 else {"answer": "قد تزيد نفقاتك."}
 
@@ -215,3 +215,8 @@ def test_prompts_force_arabic_only_and_foreign_followups_are_dropped(monkeypatch
 def test_grounded_filter_keeps_list_line_breaks():
     text = "- نقطة أولى.\n- نقطة ثانية.\nخاتمة."
     assert chat._grounded_only(text, "") == text
+
+
+def test_followups_addressed_to_the_user_are_dropped():
+    data = {"followups": ["عندك عقد جاهز ترفعه؟", "هل عندك مدة العقد؟", "وش الملفات المدعومة؟"]}
+    assert chat._followups(data) == ["وش الملفات المدعومة؟"]

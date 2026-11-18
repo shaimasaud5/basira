@@ -56,6 +56,6 @@ def test_chat_endpoint_is_limited(monkeypatch):
     tiny = RateLimiter(1, 60)
     monkeypatch.setattr(ratelimit, "chat_limiter", tiny)
     payload = {"question": "سؤال", "report": {"missing_info": ["x"]}}
-    monkeypatch.setattr("app.llm.chat_json", lambda s, u: {"answer": "ok"})
+    monkeypatch.setattr("app.llm.chat_json", lambda s, u, temperature=0: {"answer": "ok"})
     assert client.post("/chat", json=payload).status_code == 200
     assert client.post("/chat", json=payload).status_code == 429
