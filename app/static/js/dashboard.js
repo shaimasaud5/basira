@@ -177,7 +177,7 @@ function riskCard(card, isAi, openDetail) {
   const ico = el("span", "sev-ico");
   ico.append(icon(card.severity));
   const word = el("span", "sev-chip");
-  word.append(levelBars(card.severity), document.createTextNode(SEV_LABEL[card.severity] || card.severity));
+  word.append(levelBars(card.severity), document.createTextNode(`خطورة ${SEV_LABEL[card.severity] || card.severity}`));
   top.append(ico, word);
   top.append(el("span", "pill cat", CATEGORY[card.category] || card.category));
 
