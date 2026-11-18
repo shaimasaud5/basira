@@ -858,3 +858,17 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 /* الهيرو: أقرب للأعلى */
 .lp-hero { padding: 36px 0 72px; min-height: 0; align-items: flex-start; }
 @media (max-width: 960px) { .lp-hero { padding: 40px 0 56px; } }
+
+/* قسم المشكلة: بطاقات بعنوان ووصف قصير (تحذيرية) */
+.lp-compact .lp-card { min-height: 0; padding: 24px 18px; gap: 8px; border-top: 3px solid color-mix(in srgb, var(--warn) 70%, var(--line)); }
+.lp-compact .lp-card h3 { font-size: 1.05rem; margin: 6px 0 0; }
+.lp-compact .lp-card p { font-size: .9rem; line-height: 1.8; color: var(--ink-2); text-align: center; }
+.lp-head h2 { text-wrap: balance; }
+
+/* قسم الحل: شبكة 2×2 متساوية، بطاقات أفقية (أيقونة بجنب النص) تميّزها عن قسم المشكلة */
+.lp-bento { grid-template-columns: repeat(2, 1fr); }
+.lp-bento .lp-card, .lp-bento .b3, .lp-bento .b4 { grid-column: auto; grid-row: auto; display: grid; grid-template-columns: auto 1fr; column-gap: 18px; align-items: start; padding: 26px 24px; }
+.lp-bento .lp-card .lp-ico { grid-row: span 2; width: 52px; height: 52px; }
+.lp-bento .lp-card h3 { margin: 2px 0 6px; font-size: 1.15rem; }
+.lp-bento .b3 h3 { font-size: 1.15rem; }
+@media (max-width: 640px) { .lp-bento { grid-template-columns: 1fr; } }
