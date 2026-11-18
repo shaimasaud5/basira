@@ -6,6 +6,7 @@ import { initInput, openFilePicker, resetInput, showErrors } from "./input.js";
 import { renderDashboard } from "./dashboard.js";
 import { initProgress } from "./progress.js";
 import { initTheme } from "./theme.js";
+import { mountDemo } from "./demo.js";
 
 const STAGES = { input: "stage-input", loading: "stage-loading", dash: "stage-dash" };
 const app = { report: null, project: null };
@@ -23,6 +24,7 @@ function route() {
 
 /* ---------- الصفحة الرئيسية: تمرير ناعم للأقسام وظهور تدريجي هادي ---------- */
 function initLanding() {
+  mountDemo($("lp-demo"));
   document.querySelectorAll("[data-scroll]").forEach((link) => {
     link.addEventListener("click", (ev) => {
       const target = document.getElementById(link.dataset.scroll);

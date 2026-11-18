@@ -12,7 +12,7 @@ def test_health():
     assert client.get("/health").json() == {"status": "ok"}
 
 
-JS_MODULES = ["main", "api", "chat", "dashboard", "dom", "input", "progress"]
+JS_MODULES = ["main", "api", "chat", "dashboard", "dom", "input", "progress", "demo"]
 
 
 def test_landing_is_arabic_rtl_with_the_chosen_copy():
@@ -57,7 +57,8 @@ def test_landing_sections_ctas_and_footer():
     assert 'href="#how" data-scroll="how"' in page                     # الثانوية تمرّر لقسم «كيف تعمل»
     assert page.count('href="#/app"') >= 3
     assert "بصيرة تقدم قراءة أولية للعقود وتحليلًا ماليًا استرشاديًا، ولا تُعد بديلًا عن الاستشارة القانونية المتخصصة." in page
-    assert 'class="lp-footer"' in page and "مثال توضيحي" in page      # المعاينة موسومة كمثال
+    assert 'class="lp-footer"' in page
+    assert 'id="lp-demo"' in page and "مثال لتقرير ببيانات تجريبية" in page   # الداشبورد الحقيقي ببيانات موسومة كمثال
 
 
 def test_landing_scroll_wiring_exists_in_js():
@@ -259,3 +260,8 @@ def test_analyze_runs_both_model_calls_in_parallel(monkeypatch):
     monkeypatch.setattr(app_main, "request_suggestions", fake_request)
     r = client.post("/analyze", json=CONTRACT_BODY)
     assert r.status_code == 200 and r.json()["warnings"] == []
+
+
+def test_demo_uses_the_real_dashboard_renderer():
+    js = client.get("/static/js/demo.js").text
+    assert 'import { renderDashboard } from "./dashboard.js"' in js and "renderDashboard(root, DEMO_REPORT" in js
