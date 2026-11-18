@@ -64,7 +64,7 @@ def test_landing_polish_v2():
     page, css = client.get("/").text, client.get("/static/styles.css").text
     assert ".hero h1 .accent::after" not in css and "@keyframes hue" in css   # بدون خط أصفر، ألوان متحركة
     assert "color: var(--brand);" in css.split(".step-arrow {")[1].split("}")[0]   # لون السهم مثل زر البدء
-    assert 'class="brand-name">بصيرة<' in page and "family=Lalezar" in page
+    assert 'class="brand-name">بصِيـــرة<' in page and "family=Lalezar" in page
     assert 'id="nav-home"' in page and 'href="#/"' in page   # رجوع للصفحة الرئيسية
 
 

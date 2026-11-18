@@ -625,3 +625,13 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 .rcard h3 { font-size: 1.12rem; }
 .dsec-text { flex: 1 1 340px; }
 .dsec .filters { flex: none; }
+
+/* زر الرجوع: حبّة هادية بسهم باتجاه الرجوع (يمين في العربي) */
+.nav-back { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px 0 16px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--ink-2); font-weight: 700; font-size: .92rem; text-decoration: none; transition: background .15s ease, border-color .15s ease, color .15s ease; }
+.nav-back .i { width: 18px; height: 18px; transition: transform .15s ease; }
+.nav-back:hover { background: var(--brand-050); border-color: var(--brand); color: var(--brand); }
+.nav-back:hover .i { transform: translateX(3px); }
+.nav-back:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.nav-back.hidden { display: none; }
+@media (max-width: 480px) { .nav-back span { display: none; } .nav-back { width: 38px; padding: 0; justify-content: center; } }

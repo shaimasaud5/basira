@@ -29,6 +29,7 @@
     <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
     <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></symbol>
     <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
     <symbol id="i-high" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 2h8.2L22 7.9v8.2L16.1 22H7.9L2 16.1V7.9z"/><path d="M12 8v5M12 16.5h.01"/></symbol>
     <symbol id="i-medium" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
@@ -43,10 +44,10 @@
   <div class="inner">
     <a class="brand" href="#/" aria-label="بصِيـــرة، الصفحة الرئيسية">
       <svg class="logo-mark logo-anim topbar-logo" viewBox="23 55 491 591" aria-hidden="true"><use href="/static/logo.svg#frame"/><use class="t t1" href="/static/logo.svg#l1"/><use class="t t2" href="/static/logo.svg#l2"/><use class="t t3" href="/static/logo.svg#l3"/><use class="hands" href="/static/logo.svg#hands"/></svg>
-      <span class="brand-name">بصيرة</span>
+      <span class="brand-name">بصِيـــرة</span>
     </a>
     <span class="spacer"></span>
-    <a class="btn sm icon-btn hidden" id="nav-home" href="#/" aria-label="رجوع للصفحة الرئيسية" title="الصفحة الرئيسية"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    <a class="nav-back hidden" id="nav-home" href="#/" aria-label="رجوع للصفحة الرئيسية"><svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg><span>الرئيسية</span></a>
     <button class="btn ghost icon-btn" id="theme-toggle" type="button" aria-label="تبديل الوضع بين الفاتح والغامق" title="تبديل الوضع"><svg class="i i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
   </div>
 </header>
@@ -87,7 +88,7 @@
     <aside class="chat" id="chat" aria-label="بصِيـــرة">
       <div class="chat-head">
         <svg class="logo-mark chat-logo logo-anim" viewBox="23 55 491 591" aria-hidden="true"><use href="/static/logo.svg#frame"/><use class="t t1" href="/static/logo.svg#l1"/><use class="t t2" href="/static/logo.svg#l2"/><use class="t t3" href="/static/logo.svg#l3"/><use class="hands" href="/static/logo.svg#hands"/></svg>
-        <div><b class="brand-name">بصيرة</b><small><span class="dot"></span> جاهز يجاوبك</small></div>
+        <div><b class="brand-name">بصِيـــرة</b><small><span class="dot"></span> جاهز يجاوبك</small></div>
         <button class="btn ghost icon-btn chat-close" id="chat-close" type="button" aria-label="إغلاق المحادثة" title="إغلاق المحادثة"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
       </div>
       <div class="messages" id="messages" role="log" aria-live="polite" aria-label="المحادثة"></div>
