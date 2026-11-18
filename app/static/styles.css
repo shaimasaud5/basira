@@ -293,6 +293,9 @@ details.ai-box .risk { border-style: dashed; }
 .chat-logo { height: 46px; }
 .logo-anim use { transform-box: view-box; }
 .logo-anim .t1 { transform-origin: 64% 0; } .logo-anim .t2 { transform-origin: 67% 0; } .logo-anim .t3 { transform-origin: 66% 0; } .logo-anim .hands { transform-origin: 50% 62%; }
+.typing-logo .hands { animation: shake 1.6s ease-in-out infinite; }
+.typing-logo .t { animation: write 2s ease-in-out infinite; }
+.typing-logo .t2 { animation-delay: .25s; } .typing-logo .t3 { animation-delay: .5s; }
 .typing-logo { height: 34px; width: auto; aspect-ratio: 491 / 591; color: var(--brand); display: block; }
 .dot { animation: none; } .chat-head small .dot { animation: ping 2s ease-in-out infinite; }
 @keyframes ping { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--good) 50%, transparent); } 50% { box-shadow: 0 0 0 6px transparent; } }
