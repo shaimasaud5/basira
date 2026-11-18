@@ -19,8 +19,8 @@ def test_landing_is_arabic_rtl_with_the_chosen_copy():
     page = client.get("/").text
     assert 'dir="rtl"' in page and "بصِيـــرة" in page
     assert "قبل ما توقّع عقد الإيجار" in page
-    assert "مخاطر عقدك" in page and "قبل ما تلتزم بسنة أو سنتين" in page
-    assert "ابدأ التحليل" in page
+    assert "لا تلتزم بعقد قبل ما تعرف" in page and "وش يترتب عليه." in page
+    assert "ابدأ تحليل عقدك" in page and "اكتشف كيف تعمل بصيرة" in page
     assert "قراءة أولية وليست استشارة قانونية" not in page
 
 
@@ -44,11 +44,25 @@ def test_eyebrow_is_plain_text_without_icon():
     assert '<span class="eyebrow">قبل ما توقّع عقد الإيجار</span>' in page
 
 
-def test_landing_has_a_single_start_button_and_no_extra_copy():
+def test_landing_sections_ctas_and_footer():
     page = client.get("/").text
-    assert page.count("ابدأ التحليل") == 1
-    assert "كل شي بالأرقام وبالدليل" not in page
-    assert 'class="legal"' not in page
+    for section in ("problem", "features", "how", "trust"):
+        assert f'id="{section}"' in page
+    for copy in ("توقيع عقد الإيجار ليس مجرد قرار تشغيلي.", "من عقد الإيجار إلى صورة مالية واضحة.",
+                 "ثلاث خطوات تفصلك عن فهم عقدك.", "تحليل يستند إلى عقدك، وليس إلى التخمين.",
+                 "عقدك يستحق أن تفهمه قبل أن توقّعه.", "حلّل عقدك الآن", "لا يتطلب إنشاء حساب.",
+                 "موثّق من عقدك", "محسوب بالكود", "اقتراح إضافي"):
+        assert copy in page
+    assert 'class="btn primary lg cta" href="#/app"' in page          # الدعوة الأساسية تدخل التطبيق
+    assert 'href="#how" data-scroll="how"' in page                     # الثانوية تمرّر لقسم «كيف تعمل»
+    assert page.count('href="#/app"') >= 3
+    assert "بصيرة تقدم قراءة أولية للعقود وتحليلًا ماليًا استرشاديًا، ولا تُعد بديلًا عن الاستشارة القانونية المتخصصة." in page
+    assert 'class="lp-footer"' in page and "مثال توضيحي" in page      # المعاينة موسومة كمثال
+
+
+def test_landing_scroll_wiring_exists_in_js():
+    js = client.get("/static/js/main.js").text
+    assert "data-scroll" in js and 'behavior: "smooth"' in js
 
 
 def test_app_screen_copy():
@@ -83,7 +97,7 @@ def test_live_ratio_thresholds_match_the_backend():
 
 
 def test_landing_has_no_login_or_signup():
-    page = client.get("/").text.lower()
+    page = client.get("/").text.lower().replace("لا يتطلب إنشاء حساب.", "")  # عبارة تطمين مقصودة
     for word in ("login", "sign up", "signup", "تسجيل الدخول", "إنشاء حساب"):
         assert word not in page
 

@@ -17,6 +17,13 @@
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
+    <symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"/><path d="M16 13h2"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2.5" width="14" height="19" rx="2"/><path d="M8 7h8M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/></symbol>
+    <symbol id="i-quote" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h6v6a4 4 0 0 1-4 4M14 8h6v6a4 4 0 0 1-4 4"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/></symbol>
     <symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></symbol>
     <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.2 8.4-7 10-3.8-1.6-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></symbol>
@@ -46,8 +53,14 @@
       <svg class="logo-mark logo-anim topbar-logo" viewBox="23 55 491 591" aria-hidden="true"><use href="/static/logo.svg#frame"/><use class="t t1" href="/static/logo.svg#l1"/><use class="t t2" href="/static/logo.svg#l2"/><use class="t t3" href="/static/logo.svg#l3"/><use class="hands" href="/static/logo.svg#hands"/></svg>
       <span class="brand-name">بصِيـــرة</span>
     </a>
+    <nav class="lp-nav" id="lp-nav" aria-label="أقسام الصفحة">
+      <a href="#features" data-scroll="features">ماذا تقدم بصيرة</a>
+      <a href="#how" data-scroll="how">كيف تعمل</a>
+      <a href="#trust" data-scroll="trust">الثقة والشفافية</a>
+    </nav>
     <span class="spacer"></span>
-    <a class="nav-back hidden" id="nav-home" href="#/" aria-label="رجوع للصفحة الرئيسية"><svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg><span>الرئيسية</span></a>
+    <a class="btn primary sm lp-top-cta" id="lp-top-cta" href="#/app">ابدأ الآن</a>
+    <a class="nav-back hidden" id="nav-home" href="#/" aria-label="رجوع للصفحة الرئيسية"><svg class="i" aria-hidden="true"><use href="#i-chevron"/></svg></a>
     <button class="btn ghost icon-btn" id="theme-toggle" type="button" aria-label="تبديل الوضع بين الفاتح والغامق" title="تبديل الوضع"><svg class="i i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
   </div>
 </header>
@@ -56,29 +69,173 @@
 <!-- ================= Landing ================= -->
 <section id="view-landing" class="landing">
   <div class="bg" aria-hidden="true"></div>
-  <svg class="bg-logo" viewBox="23 55 491 591" aria-hidden="true">
-    <use href="/static/logo.svg#frame"/>
-    <use class="t t1" href="/static/logo.svg#l1"/>
-    <use class="t t2" href="/static/logo.svg#l2"/>
-    <use class="t t3" href="/static/logo.svg#l3"/>
-    <use class="hands" href="/static/logo.svg#hands"/>
-  </svg>
 
-  <div class="hero">
-    <span class="eyebrow">قبل ما توقّع عقد الإيجار</span>
-    <h1>اعرف <span class="accent">مخاطر عقدك</span> قبل ما تلتزم بسنة أو سنتين</h1>
-    <p class="sub">بصيرة تكشف لرائد الأعمال التزاماته ومخاطر عقد الإيجار قبل التوقيع، بتحليل واضح يستند إلى الأرقام وبنود العقد.</p>
-    <a class="btn primary lg cta" href="#/app">ابدأ التحليل <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+  <!-- ===== 1. Hero ===== -->
+  <div class="lp-hero">
+    <svg class="bg-logo" viewBox="23 55 491 591" aria-hidden="true">
+      <use href="/static/logo.svg#frame"/>
+      <use class="t t1" href="/static/logo.svg#l1"/>
+      <use class="t t2" href="/static/logo.svg#l2"/>
+      <use class="t t3" href="/static/logo.svg#l3"/>
+      <use class="hands" href="/static/logo.svg#hands"/>
+    </svg>
+    <div class="lp-wrap lp-hero-grid">
+      <div class="lp-hero-text">
+        <span class="eyebrow">قبل ما توقّع عقد الإيجار</span>
+        <h1>لا تلتزم بعقد قبل ما تعرف <span class="accent">وش يترتب عليه.</span></h1>
+        <p class="lp-lead">بصيرة تحلّل عقد الإيجار وبيانات مشروعك، وتكشف لك المخاطر والالتزامات المالية بالأرقام، مع أدلة وتوصيات تساعدك على اتخاذ قرار أكثر وعيًا قبل التوقيع.</p>
+        <div class="lp-cta-row">
+          <a class="btn primary lg cta" href="#/app">ابدأ تحليل عقدك <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn lg lp-secondary" href="#how" data-scroll="how">اكتشف كيف تعمل بصيرة</a>
+        </div>
+      </div>
 
-    <ol class="steps" aria-label="خطوات الاستخدام" style="list-style:none;padding:0">
-      <li class="step"><span class="ico"><svg aria-hidden="true"><use href="#i-briefcase"/></svg></span><b>عبّ بيانات مشروعك</b><span class="cap">النشاط والمدينة والإيجار</span></li>
-      <li class="step-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></li>
-      <li class="step"><span class="ico"><svg aria-hidden="true"><use href="#i-upload"/></svg></span><b>ارفع عقدك</b><span class="cap">PDF أو Word</span></li>
-      <li class="step-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></li>
-      <li class="step"><span class="ico"><svg aria-hidden="true"><use href="#i-chart"/></svg></span><b>شوف المخاطر</b><span class="cap">بالأرقام وبالدليل</span></li>
-    </ol>
-
+      <!-- معاينة المنتج: نفس تصميم الداشبورد الحقيقي ببيانات مثال -->
+      <figure class="lp-preview" aria-label="معاينة لتقرير بصيرة ببيانات مثال">
+        <div class="lp-pv-bar">
+          <span class="lp-pv-title">تقرير مخاطر عقدك</span>
+          <span class="pill">مثال توضيحي</span>
+        </div>
+        <div class="lp-pv-body">
+          <div class="lp-pv-gauge" style="--meter: var(--crit)">
+            <span class="label">نسبة الإيجار من إيرادك</span>
+            <div class="gauge">
+              <svg viewBox="0 0 200 112" role="img" aria-label="مقياس نسبة الإيجار: 25%">
+                <path d="M180 100A80 80 0 0 0 20 100" pathLength="100" fill="none" stroke="var(--good)" stroke-width="14" stroke-dasharray="25 100"/>
+                <path d="M180 100A80 80 0 0 0 20 100" pathLength="100" fill="none" stroke="var(--warn)" stroke-width="14" stroke-dasharray="12.5 100" stroke-dashoffset="-25"/>
+                <path d="M180 100A80 80 0 0 0 20 100" pathLength="100" fill="none" stroke="var(--crit)" stroke-width="14" stroke-dasharray="62.5 100" stroke-dashoffset="-37.5"/>
+                <circle cx="69.4" cy="26.1" r="8" fill="var(--surface)" stroke="var(--ink)" stroke-width="3"/>
+              </svg>
+              <div class="gauge-center"><div class="hero-figure">25<small>%</small></div></div>
+            </div>
+            <div class="state sev-high"><svg class="i" aria-hidden="true"><use href="#i-high"/></svg>نسبة عالية</div>
+            <div class="hero-caption"><b>15,000 ريال</b> إيجار شهري من <b>60,000 ريال</b> إيراد شهري</div>
+          </div>
+          <div class="lp-pv-stats">
+            <div class="lp-pv-stat">
+              <span class="label">إجمالي التزام الإيجار</span>
+              <div class="value">360,000<small>ريال</small></div>
+              <div class="sub">على مدى 24 شهر</div>
+            </div>
+            <div class="lp-pv-stat">
+              <span class="label">الإيجار بعد الزيادة</span>
+              <div class="value">16,125<small>ريال/شهر</small></div>
+              <div class="sub"><svg class="i" aria-hidden="true"><use href="#i-trend"/></svg>+1,125 شهرياً <bdi dir="ltr">(7.5%)</bdi></div>
+            </div>
+          </div>
+          <article class="rcard sev-medium lp-pv-risk">
+            <div class="rc-top">
+              <span class="sev-ico"><svg class="i" aria-hidden="true"><use href="#i-medium"/></svg></span>
+              <span class="sev-chip"><span class="levelbars" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span>متوسطة</span>
+              <span class="pill cat">عقد</span>
+            </div>
+            <h3>الإيجار يزيد بعد التجديد</h3>
+            <p class="rc-why">الزيادة ترفع التزامك الثابت بدون ما يزيد إيرادك بالضرورة.</p>
+            <blockquote class="lp-evidence">«يزداد الإيجار بنسبة 7.5% عند كل تجديد.»</blockquote>
+            <div class="rc-foot"><span class="trust"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>موثّق من عقدك</span></div>
+          </article>
+        </div>
+      </figure>
+    </div>
   </div>
+
+  <!-- ===== 2. المشكلة ===== -->
+  <section class="lp-section" id="problem" aria-labelledby="problem-title">
+    <div class="lp-wrap">
+      <header class="lp-head lp-reveal">
+        <h2 id="problem-title">توقيع عقد الإيجار ليس مجرد قرار تشغيلي.</h2>
+        <p>قد يبدو مبلغ الإيجار مناسبًا في البداية، لكن ماذا عن الزيادات السنوية؟ وغرامات الإنهاء؟ والتزامات الصيانة؟ وهل يتناسب الإيجار فعلًا مع إيرادات مشروعك؟</p>
+      </header>
+      <ul class="lp-grid lp-grid-4">
+        <li class="lp-card lp-reveal"><span class="lp-ico warn"><svg aria-hidden="true"><use href="#i-wallet"/></svg></span><h3>التزامات مالية قد لا تكون واضحة.</h3></li>
+        <li class="lp-card lp-reveal"><span class="lp-ico warn"><svg aria-hidden="true"><use href="#i-trend"/></svg></span><h3>زيادات إيجارية تؤثر على ميزانيتك.</h3></li>
+        <li class="lp-card lp-reveal"><span class="lp-ico warn"><svg aria-hidden="true"><use href="#i-alert"/></svg></span><h3>بنود تعاقدية تحمل مخاطر غير ملحوظة.</h3></li>
+        <li class="lp-card lp-reveal"><span class="lp-ico warn"><svg aria-hidden="true"><use href="#i-search"/></svg></span><h3>صعوبة تقييم العقد قبل الالتزام به.</h3></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 3. ماذا تقدم بصيرة ===== -->
+  <section class="lp-section lp-alt" id="features" aria-labelledby="features-title">
+    <div class="lp-wrap">
+      <header class="lp-head lp-reveal">
+        <h2 id="features-title">من عقد الإيجار إلى صورة مالية واضحة.</h2>
+      </header>
+      <ul class="lp-grid lp-grid-4">
+        <li class="lp-card lp-reveal"><span class="lp-ico"><svg aria-hidden="true"><use href="#i-doc"/></svg></span><h3>تحليل العقد</h3><p>استخراج البنود والالتزامات المهمة من عقد الإيجار.</p></li>
+        <li class="lp-card lp-reveal"><span class="lp-ico"><svg aria-hidden="true"><use href="#i-alert"/></svg></span><h3>كشف المخاطر</h3><p>تحديد البنود التي قد تشكل مخاطر على مشروعك، مع إرفاق الدليل من العقد.</p></li>
+        <li class="lp-card lp-reveal"><span class="lp-ico"><svg aria-hidden="true"><use href="#i-calc"/></svg></span><h3>التحليل المالي</h3><p>حساب إجمالي الالتزامات، ونسبة الإيجار من الإيرادات، وأثر الزيادات الإيجارية.</p></li>
+        <li class="lp-card lp-reveal"><span class="lp-ico"><svg aria-hidden="true"><use href="#i-bulb"/></svg></span><h3>التوصيات الذكية</h3><p>تقديم توصيات تساعدك على فهم المخاطر والاستعداد للتفاوض.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 4. كيف تعمل ===== -->
+  <section class="lp-section" id="how" aria-labelledby="how-title">
+    <div class="lp-wrap">
+      <header class="lp-head lp-reveal">
+        <h2 id="how-title">ثلاث خطوات تفصلك عن فهم عقدك.</h2>
+      </header>
+      <ol class="lp-steps">
+        <li class="lp-step lp-reveal"><span class="lp-num">01</span><span class="lp-ico"><svg aria-hidden="true"><use href="#i-briefcase"/></svg></span><h3>أدخل بيانات مشروعك.</h3><p>أضف بيانات الإيرادات والإيجار والمعلومات الأساسية لمشروعك.</p></li>
+        <li class="lp-step lp-reveal"><span class="lp-num">02</span><span class="lp-ico"><svg aria-hidden="true"><use href="#i-upload"/></svg></span><h3>ارفع عقد الإيجار.</h3><p>ارفع عقدك بصيغة PDF أو Word، وراجع النص المستخرج قبل بدء التحليل.</p></li>
+        <li class="lp-step lp-reveal"><span class="lp-num">03</span><span class="lp-ico"><svg aria-hidden="true"><use href="#i-chart"/></svg></span><h3>استلم تقريرك.</h3><p>احصل على تحليل مالي وبطاقات مخاطر مرتبة حسب مستوى الخطورة، مع الأدلة والتوصيات.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== 5. الثقة والشفافية ===== -->
+  <section class="lp-section lp-alt" id="trust" aria-labelledby="trust-title">
+    <div class="lp-wrap">
+      <header class="lp-head lp-reveal">
+        <h2 id="trust-title">تحليل يستند إلى عقدك، وليس إلى التخمين.</h2>
+      </header>
+      <ul class="lp-grid lp-grid-3">
+        <li class="lp-card lp-reveal"><span class="lp-ico"><svg aria-hidden="true"><use href="#i-quote"/></svg></span><h3>الدليل من عقدك</h3><p>كل خطر موثّق يأتي معه اقتباس من البند المرتبط به.</p></li>
+        <li class="lp-card lp-reveal"><span class="lp-ico"><svg aria-hidden="true"><use href="#i-code"/></svg></span><h3>حسابات دقيقة برمجيًا</h3><p>الحسابات المالية تُنفّذ بالكود، وليس بتقديرات الذكاء الاصطناعي.</p></li>
+        <li class="lp-card lp-reveal"><span class="lp-ico"><svg aria-hidden="true"><use href="#i-lock"/></svg></span><h3>خصوصية مستنداتك</h3><p>لا يتم الاحتفاظ بمحتوى العقد بعد المعالجة، مع إخفاء بعض البيانات الحساسة قبل إرساله لمزوّد الذكاء الاصطناعي.</p></li>
+      </ul>
+      <ul class="lp-labels lp-reveal" aria-label="علامات التحقق في التقرير">
+        <li><span class="trust"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>موثّق من عقدك</span></li>
+        <li><span class="trust"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>محسوب بالكود</span></li>
+        <li><span class="trust ai">اقتراح إضافي</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 6. الدعوة الأخيرة ===== -->
+  <section class="lp-section lp-final-wrap" aria-labelledby="final-title">
+    <div class="lp-wrap">
+      <div class="lp-final lp-reveal">
+        <h2 id="final-title">عقدك يستحق أن تفهمه قبل أن توقّعه.</h2>
+        <p>ابدأ الآن، واكتشف التزاماتك المالية ومخاطر عقد الإيجار قبل اتخاذ قرارك.</p>
+        <a class="btn lg lp-final-btn" href="#/app">حلّل عقدك الآن <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <small>لا يتطلب إنشاء حساب.</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 7. الفوتر ===== -->
+  <footer class="lp-footer">
+    <div class="lp-wrap">
+      <div class="lp-foot-grid">
+        <div class="lp-foot-brand">
+          <a class="brand" href="#/" aria-label="بصِيـــرة، الصفحة الرئيسية">
+            <svg class="logo-mark" viewBox="23 55 491 591" aria-hidden="true"><use href="/static/logo.svg#frame"/><use class="t t1" href="/static/logo.svg#l1"/><use class="t t2" href="/static/logo.svg#l2"/><use class="t t3" href="/static/logo.svg#l3"/><use class="hands" href="/static/logo.svg#hands"/></svg>
+            <span class="brand-name">بصِيـــرة</span>
+          </a>
+          <p>منصة عربية تساعد رواد الأعمال في السعودية على فهم التزامات ومخاطر عقد الإيجار التجاري قبل التوقيع.</p>
+        </div>
+        <nav class="lp-foot-nav" aria-label="روابط الموقع">
+          <a href="#features" data-scroll="features">ماذا تقدم بصيرة</a>
+          <a href="#how" data-scroll="how">كيف تعمل</a>
+          <a href="#trust" data-scroll="trust">الثقة والشفافية</a>
+          <a href="#/app">ابدأ التحليل</a>
+        </nav>
+      </div>
+      <p class="lp-disclaimer">بصيرة تقدم قراءة أولية للعقود وتحليلًا ماليًا استرشاديًا، ولا تُعد بديلًا عن الاستشارة القانونية المتخصصة.</p>
+    </div>
+  </footer>
 </section>
 
 <!-- ================= Home ================= -->

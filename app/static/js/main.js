@@ -16,7 +16,27 @@ function route() {
   show($("view-landing"), !inApp);
   show($("view-home"), inApp);
   show($("nav-home"), inApp);
+  show($("lp-nav"), !inApp);
+  show($("lp-top-cta"), !inApp);
   window.scrollTo({ top: 0 });
+}
+
+/* ---------- الصفحة الرئيسية: تمرير ناعم للأقسام وظهور تدريجي هادي ---------- */
+function initLanding() {
+  document.querySelectorAll("[data-scroll]").forEach((link) => {
+    link.addEventListener("click", (ev) => {
+      const target = document.getElementById(link.dataset.scroll);
+      if (!target) return;
+      ev.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+  if (!("IntersectionObserver" in window)) return;
+  document.documentElement.classList.add("lp-js");
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { rootMargin: "0px 0px -8% 0px" });
+  document.querySelectorAll(".lp-reveal").forEach((n) => io.observe(n));
 }
 
 /* ---------- مراحل شاشة التطبيق ---------- */
@@ -74,4 +94,5 @@ initChat({ onAttach: () => { setStage("input"); openFilePicker(); } });
 initInput({ onSubmit: submit });
 initProgress();
 initTheme();
+initLanding();
 route();
