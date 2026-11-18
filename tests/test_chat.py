@@ -210,3 +210,8 @@ def test_prompts_force_arabic_only_and_foreign_followups_are_dropped(monkeypatch
         assert "بالعربية فقط" in prompt and "صينية" in prompt
     fake(monkeypatch, {"answer": "ok", "followups": ["كيف أفاوض 谈判؟", "وش البنود؟", "Привет"]})
     assert client.post("/chat", json=body()).json()["suggestions"] == ["وش البنود؟"]
+
+
+def test_grounded_filter_keeps_list_line_breaks():
+    text = "- نقطة أولى.\n- نقطة ثانية.\nخاتمة."
+    assert chat._grounded_only(text, "") == text
