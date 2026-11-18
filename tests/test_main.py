@@ -21,7 +21,7 @@ def test_landing_is_arabic_rtl_with_the_chosen_copy():
     assert "قبل ما توقّع عقد الإيجار" in page
     assert "مخاطر عقدك" in page and "قبل ما تلتزم بسنة أو سنتين" in page
     assert "ابدأ التحليل" in page
-    assert "قراءة أولية وليست استشارة قانونية" in page
+    assert "قراءة أولية وليست استشارة قانونية" not in page
 
 
 def test_logo_svg_has_separate_animatable_layers():
@@ -48,7 +48,7 @@ def test_landing_has_a_single_start_button_and_no_extra_copy():
     page = client.get("/").text
     assert page.count("ابدأ التحليل") == 1
     assert "كل شي بالأرقام وبالدليل" not in page
-    assert '<span>قراءة أولية وليست استشارة قانونية</span>' in page  # بدون أيقونة مفتاح
+    assert 'class="legal"' not in page
 
 
 def test_app_screen_copy():

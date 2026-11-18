@@ -339,5 +339,5 @@ export function renderDashboard(root, report, project, hooks) {
   root.append(risks.box);
   draw();
 
-  root.append(el("div", "disclaimer", report.disclaimer), detail.dlg);
+  root.append(detail.dlg);
 }
