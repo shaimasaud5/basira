@@ -875,3 +875,44 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 
 /* المثال: بدون وسم الفئة وبدون علامة «موثّق» */
 .lp-demo .rcard .pill.cat, .lp-demo .rcard .trust { display: none; }
+
+/* ===== المشكلة والحل: تخطيط منقسم (عنوان بجهة وصفوف بالجهة الثانية) ===== */
+.lp-split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: start; }
+.lp-split.rev { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.lp-split.rev .lp-split-head { order: 2; }
+.lp-split-head { position: sticky; top: calc(var(--topbar-h) + 32px); }
+.lp-split-head h2 { margin: 0 0 16px; font-size: clamp(1.7rem, 3.2vw, 2.4rem); line-height: 1.4; font-weight: 800; letter-spacing: -.2px; text-wrap: balance; }
+.lp-split-head p { margin: 0; color: var(--ink-2); font-size: 1.08rem; line-height: 1.95; }
+.lp-rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.lp-row { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; padding: 26px 4px; border-bottom: 1px solid var(--line); transition: padding .2s ease, background .2s ease; }
+.lp-row:hover { padding-inline-start: 14px; }
+.lp-row .lp-ico { width: 52px; height: 52px; border-radius: 50%; }
+.lp-row h3 { margin: 0 0 4px; font-size: 1.2rem; line-height: 1.5; }
+.lp-row p { margin: 0; color: var(--ink-2); font-size: 1rem; line-height: 1.85; }
+@media (max-width: 960px) {
+  .lp-split, .lp-split.rev { grid-template-columns: 1fr; gap: 32px; }
+  .lp-split.rev .lp-split-head { order: 0; }
+  .lp-split-head { position: static; }
+}
+@media (max-width: 640px) { .lp-row { gap: 14px; padding: 20px 0; } .lp-row .lp-ico { width: 44px; height: 44px; } }
+
+/* الثقة: كل بطاقة معها دليل فعلي */
+.lp-proofs { gap: 18px; }
+.lp-proof { display: flex; flex-direction: column; padding: 28px 24px; }
+.lp-proof h3 { margin: 0 0 10px; font-size: 1.25rem; }
+.lp-proof p { margin: 0 0 20px; font-size: 1rem; }
+.lp-proof .lp-evidence, .lp-proof .lp-formula, .lp-proof .lp-masked { margin-top: auto; }
+.lp-formula { padding: 16px; text-align: center; border-radius: 12px; background: var(--brand-050); border: 1px solid color-mix(in srgb, var(--brand) 25%, var(--line)); font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 1.05rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.lp-formula b { color: var(--brand); font-size: 1.3rem; }
+.lp-masked { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.lp-masked li { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; background: var(--surface-2); border: 1px dashed var(--line-strong); color: var(--ink-2); font-weight: 700; font-size: .9rem; }
+.lp-masked .i { width: 15px; height: 15px; color: var(--brand); }
+/* فوتر مبسّط */
+.lp-footer .lp-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.lp-footer .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+.lp-footer .logo-mark { height: 40px; }
+.lp-footer .lp-disclaimer { margin: 18px 0 0; padding-top: 0; border-top: 0; max-width: 640px; }
+
+.lp-evidence { margin: 0; padding: 14px 16px; border-inline-start: 3px solid var(--brand); background: var(--brand-050); border-radius: 10px; font-size: .95rem; line-height: 1.9; color: var(--ink); }
+.lp-formula { display: flex; flex-direction: column; gap: 4px; font-size: 1rem; }
+.lp-formula span { white-space: nowrap; }

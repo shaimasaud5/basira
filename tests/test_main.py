@@ -46,12 +46,12 @@ def test_hero_starts_directly_with_the_headline():
 
 def test_landing_sections_ctas_and_footer():
     page = client.get("/").text
-    for section in ("problem", "features", "how", "trust"):
+    for section in ("features", "how", "trust"):
         assert f'id="{section}"' in page
-    for copy in ("تفاصيل صغيرة في العقد، والتزامات تمتد لسنوات.", "من قراءة العقد إلى فهم تبعاته.",
+    for copy in ("من قراءة العقد إلى فهم تبعاته.",
                  "ثلاث خطوات تفصلك عن فهم عقدك.", "تحليل يستند إلى عقدك، وليس إلى التخمين.",
                  "عقدك يستحق أن تفهمه قبل أن توقّعه.", "حلّل عقدك الآن", "لا يتطلب إنشاء حساب.",
-                 "موثّق من عقدك", "محسوب بالكود", "اقتراح إضافي"):
+                 "الدليل من عقدك", "حسابات دقيقة برمجيًا", "خصوصية مستنداتك"):
         assert copy in page
     assert 'class="btn primary lg cta" href="#/app"' in page          # الدعوة الأساسية تدخل التطبيق
     assert 'href="#how" data-scroll="how"' in page                     # الثانوية تمرّر لقسم «كيف تعمل»
