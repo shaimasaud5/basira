@@ -986,3 +986,35 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 .lp-plain { background: var(--bg); border-bottom: 1px solid var(--line); }
 .lp-alt { background: var(--surface-2); border-block: 1px solid var(--line); }
 .lp-cta { margin-top: 0; }
+
+/* كيف تعمل: الخطوات تظهر واحدة بعد واحدة، والخط يمتد معها */
+.lp-js .lp-step.lp-reveal { transition: opacity .6s ease, transform .6s ease; }
+.lp-js .lp-step.lp-reveal:not(.in) { transform: translateY(26px); }
+.lp-steps .lp-step:nth-child(1) { transition-delay: 0s; }
+.lp-steps .lp-step:nth-child(2) { transition-delay: .7s; }
+.lp-steps .lp-step:nth-child(3) { transition-delay: 1.4s; }
+@supports selector(:has(*)) {
+  .lp-js .lp-steps::before { transform: scaleX(0); transform-origin: right center; transition: transform 1.6s ease .3s; }
+  .lp-js .lp-steps:has(.lp-step.in)::before { transform: scaleX(1); }
+}
+
+/* ست بطاقات في صف واحد */
+#features .lp-feat { padding: 30px 14px 28px; }
+#features .lp-feat h3 { font-size: 1.08rem; }
+#features .lp-feat p { font-size: .88rem; }
+
+/* أهداف لمس مريحة على الجوال */
+@media (max-width: 960px) { .lp-demo .rc-more { min-height: 44px; padding-inline: 10px; } }
+
+/* الشريط العلوي على الجوال: الزر في سطر واحد */
+.lp-top-cta { white-space: nowrap; }
+@media (max-width: 400px) {
+  .topbar .inner { gap: 8px; padding: 0 12px; }
+  .lp-top-cta { padding: 6px 14px; min-height: 40px; font-size: .9rem; }
+  .brand-name { font-size: 1.7rem; }
+}
+
+/* أزرار الاقتراحات في الفورم: حجم لمس مريح على الجوال */
+@media (max-width: 960px) { .chips button { min-height: 40px; padding: 6px 16px; } .chips { gap: 8px; } }
+
+@media (max-width: 1000px) { #features .lp-feats { scrollbar-width: none; } #features .lp-feats::-webkit-scrollbar { display: none; } }
