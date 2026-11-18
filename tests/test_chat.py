@@ -220,3 +220,13 @@ def test_grounded_filter_keeps_list_line_breaks():
 def test_followups_addressed_to_the_user_are_dropped():
     data = {"followups": ["عندك عقد جاهز ترفعه؟", "هل عندك مدة العقد؟", "وش الملفات المدعومة؟"]}
     assert chat._followups(data) == ["وش الملفات المدعومة؟"]
+
+
+def test_style_checks_flag_stiff_mixed_and_noisy_replies():
+    flagged = lambda text, src="": chat._issues(text, src)
+    assert flagged("يرجى مراجعة العقد.")                      # عبارة رسمية جافة
+    assert flagged("نقدر نحللها وأقدر أساعدك.")                # خلط نقدر/أقدر
+    assert flagged("الملف يحتاج scanner.")                    # كلمة إنجليزية غير لازمة
+    assert flagged("**مهم** اقرأ البند.")                     # رموز تنسيق
+    assert flagged("ا" * 950)                                 # طويل
+    assert not flagged("أصلاً أقدر أحلل PDF نصي أو Word (docx) بدون مشكلة.")
