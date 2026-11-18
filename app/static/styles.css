@@ -946,3 +946,16 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 .lp-big:hover { padding-inline-start: 22px; }
 .lp-big:hover h3 { color: var(--brand); }
 @media (max-width: 800px) { .lp-big { grid-template-columns: 1fr; gap: 10px; padding: 26px 0; } .lp-big p { font-size: 1rem; } }
+
+/* المميزات: خمس بطاقات طولية مدوّرة في صف واحد */
+#features .lp-feats { display: flex; flex-wrap: nowrap; justify-content: stretch; gap: 14px; }
+#features .lp-feat { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 32px 18px 30px; min-height: 330px; border-radius: 32px; box-shadow: none; background: var(--surface); }
+#features .lp-feat .lp-ico { width: 64px; height: 64px; border-radius: 50%; }
+#features .lp-feat .lp-ico svg { width: 28px; height: 28px; }
+#features .lp-feat h3 { margin: 20px 0 10px; font-size: 1.15rem; }
+#features .lp-feat p { font-size: .92rem; line-height: 1.85; color: var(--ink-2); text-align: center; }
+#features .lp-feat:hover { transform: translateY(-4px); border-color: var(--brand); }
+@media (max-width: 1000px) {
+  #features .lp-feats { overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px; margin-inline: -20px; padding-inline: 20px; }
+  #features .lp-feat { flex: 0 0 230px; scroll-snap-align: start; min-height: 310px; }
+}
