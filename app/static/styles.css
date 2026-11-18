@@ -923,3 +923,8 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 .lp-feat h3 { margin: 18px 0 8px; font-size: 1.2rem; }
 .lp-feat p { font-size: 1rem; }
 @media (max-width: 700px) { .lp-feat { flex-basis: 100%; min-width: 0; } }
+
+/* كيف تعمل: عناوين وأيقونات فقط */
+.lp-step { padding: 28px 20px; }
+.lp-step h3 { margin: 16px 0 0; font-size: 1.2rem; }
+.lp-steps::before { top: 66px; }
