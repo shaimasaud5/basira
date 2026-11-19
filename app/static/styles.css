@@ -1135,3 +1135,4 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 @keyframes lpMsgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes lpTyping { 0% { opacity: 0; } 12%, 88% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes lpDot { 0%, 100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(-3px); opacity: 1; } }
+@media (max-width: 960px) { .lp-hero-grid { row-gap: 50px; } }
