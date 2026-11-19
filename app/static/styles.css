@@ -1187,3 +1187,8 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
   .lp-section { scroll-margin-top: var(--topbar-h); }
   .lp-hero { padding-top: 76px; }
 }
+
+/* زر الهيرو: أكبر قليلًا ومرفوع قليلًا */
+.lp-cta-row { margin-top: -10px; }
+.lp-cta-row .btn.lg { min-height: 46px; padding: 9px 28px; font-size: 1rem; }
+@media (max-width: 640px) { .lp-cta-row .btn.lg { min-height: 42px; min-width: 190px; padding: 8px 22px; font-size: .9rem; } }
