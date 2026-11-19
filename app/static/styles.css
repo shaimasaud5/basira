@@ -1089,8 +1089,6 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 @media (max-width: 360px) { .lp-cta-row .btn.lg { white-space: normal; line-height: 1.3; text-align: center; } }
 @media (max-width: 960px) { .lp-hero { padding-top: 76px; } }
 
-/* لوقو الخلفية يتوسّط العنوان والوصف فقط (بدون الأزرار) */
-.lp-hero-copy { position: relative; }
 
 /* مثال الصفحة الرئيسية: نافذة التفاصيل بدون «موثّق» وبدون اسم التصنيف */
 .lp-demo .risk-dialog .trust, .lp-demo .risk-dialog .dlg-cat { display: none; }
@@ -1106,4 +1104,3 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 /* الدعوة الأخيرة: زر أصغر، ولوقو الهيرو أنزل قليلًا */
 .lp-cta-btn { min-height: 42px; padding: 8px 26px; font-size: .95rem; border-radius: 12px; }
 @media (max-width: 640px) { .lp-cta-btn { width: auto; min-width: 200px; padding-inline: 24px; } }
-.lp-hero-copy .bg-logo { top: 62%; }
