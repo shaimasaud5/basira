@@ -1,3 +1,4 @@
+# ملاحظة: النسخة النهائية للبوستر هي basira-poster.html (مكتوبة يدويًا). هذا السكربت يولّد تصميم الجوال الواحد القديم فقط.
 import re, pathlib
 root = pathlib.Path(__file__).resolve().parents[2]
 logo = (root / "app/static/logo.svg").read_text()

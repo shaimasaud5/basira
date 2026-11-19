@@ -58,6 +58,17 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
 .dot { width:8px; height:8px; border-radius:50%; background:#5fd07f; display:inline-block; margin-inline-end:6px; }
 .hsub { font-size: 13px; color: var(--ink2); }
 .home { position:absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; border-radius: 3px; background: #9aa1a9; opacity:.8; }
+
+.cl { position:absolute; width: 460px; height: 535px; }
+.cl .fcard { position:absolute; }
+.cl .g { right: 0; top: 0; width: 290px; z-index: 3; }
+.cl .s1 { left: 0; top: 40px; width: 215px; z-index: 4; padding: 14px 18px; }
+.cl .s2 { left: 0; top: 186px; width: 215px; z-index: 4; padding: 14px 18px; }
+.cl .s1 .big, .cl .s2 .big { font-size: 36px; }
+.cl .r { left: 30px; bottom: 0; width: 340px; z-index: 5; }
+.cl .r h5 { font-size: 20px; }
+.pw { position:absolute; transform-origin: 0 0; }
+.pw .phone { box-shadow: 0 30px 60px rgba(20,60,100,.22), 0 0 0 2px #c3c8ce inset; }
 </style></head><body>
 <div class="poster">
 
@@ -75,8 +86,15 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
   <div class="sub">يكشف لك الالتزامات والمخاطر، لتتخذ قراراتك بثقة قبل توقيع العقد.</div>
 
   <!-- جوال 1: التقرير -->
-  <div class="phones stage">
-  <div class="phone" style="left: 150px; top: 0px;">
+  <div class="cl" style="left: 30px; top: 235px;">
+  <div class="fcard g"><h4>نسبة الإيجار من إيرادك</h4>
+    <svg class="gauge" viewBox="0 0 250 135"><path d="M25 125 A100 100 0 0 1 90 31" fill="none" stroke="#dc9b97" stroke-width="22"/><path d="M99 28 A100 100 0 0 1 150 28" fill="none" stroke="#f0cd72" stroke-width="22"/><path d="M159 31 A100 100 0 0 1 225 125" fill="none" stroke="#86c987" stroke-width="22"/><circle cx="46" cy="92" r="11" fill="#c8453f" stroke="#ffffff" stroke-width="4"/></svg>
+    <div class="pct">25<small>%</small></div><div class="sev">نسبة عالية</div>
+    <div class="sub2"><b>15,000 ريال</b> إيجار شهري من <b>60,000 ريال</b> إيراد شهري</div></div>
+  <div class="fcard s1"><div class="lbl">إجمالي التزام الإيجار</div><div class="big">360,000<small>ريال</small></div><div class="note">على مدى 24 شهر</div></div>
+  <div class="fcard s2"><div class="lbl">الإيجار بعد الزيادة</div><div class="big">16,125<small>ريال/شهر</small></div><div class="note">+1,125 شهريًا (7.5%)</div></div>
+  <div class="fcard risk r"><span class="chip">▮▮▯ خطورة متوسطة</span><h5>الصيانة على المستأجر</h5><p>تكلفة الصيانة تنزل من أرباحك لو كانت عليك.</p></div>
+</div><div class="pw" style="left: 530px; top: 120px; transform: scale(.8);"><div class="phone" style="left: 0px; top: 0px;">
     <div class="scr">
       <div class="island"></div>
       <div class="status"><span>5:26</span><span>5G ▮▮▮</span></div>
@@ -91,35 +109,15 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
 <div><div class="nm">بصِيـــرة</div></div><span class="hsub" style="margin-inline-start:auto"><i class="dot"></i>جاهز يجاوبك</span></div>
       <div class="body">
         <div class="msgs">
-          <div class="m bot">هلا! أنا بصِيـــرة، مساعدك في عقد إيجار مشروعك.</div>
-          <div class="m user">هل يحتوي عقدي على مخاطر؟</div>
-          <div class="m bot">لاحظت وجود بند يستحق المراجعة قبل التوقيع: الإيجار يرتفع 7.5% عند كل تجديد، وهذا مثبّت في العقد.</div>
+          <div class="m bot">هلا! أنا بصِيـــرة. اسألني عن عقد إيجارك.</div>
+          <div class="m user">كم بيصير إيجاري بعد الزيادة؟</div>
+          <div class="m bot">بعد زيادة 7.5% بيصير إيجارك 16,125 ريال شهريًا، يعني أكثر بمقدار 1,125 ريال.</div>
+          <div class="m user">وهل الإيجار ثقيل على إيرادي؟</div>
+          <div class="m bot">نعم، ياخذ 25% من إيرادك وهذي نسبة عالية. راجع بند الزيادة قبل التوقيع.</div>
         </div>
         <div class="chips"><span>وش أحتاج أجهّز؟</span><span>هل عقدي يتخزن؟</span></div>
         <div class="comp"><div class="snd">➤</div><div class="in">اكتب سؤالك هنا...</div></div>
       </div>
       <div class="home"></div>
-    </div>
-
-    <div class="fcard" style="left: -10px; top: 535px; width: 330px; z-index: 6;">
-      <h4>نسبة الإيجار من إيرادك</h4>
-      <svg class="gauge" viewBox="0 0 250 135">
-        <path d="M25 125 A100 100 0 0 1 90 31" fill="none" stroke="#dc9b97" stroke-width="22"/>
-        <path d="M99 28 A100 100 0 0 1 150 28" fill="none" stroke="#f0cd72" stroke-width="22"/>
-        <path d="M159 31 A100 100 0 0 1 225 125" fill="none" stroke="#86c987" stroke-width="22"/>
-        <circle cx="46" cy="92" r="11" fill="#c8453f" stroke="#ffffff" stroke-width="4"/>
-      </svg>
-      <div class="pct">25<small>%</small></div>
-      <div class="sev">نسبة عالية</div>
-      <div class="sub2"><b>15,000 ريال</b> إيجار شهري من <b>60,000 ريال</b> إيراد شهري</div>
-    </div>
-    <div class="fcard" style="left: 450px; top: 200px; width: 300px; z-index: 6;">
-      <div class="lbl">إجمالي التزام الإيجار</div><div class="big">360,000<small>ريال</small></div><div class="note">على مدى 24 شهر</div>
-    </div>
-    <div class="fcard risk" style="left: 410px; top: 470px; width: 340px; z-index: 6;">
-      <span class="chip">▮▮▯ خطورة عالية</span><h5>الإيجار يأخذ جزء كبير من الإيراد</h5><p>الإيجار ثابت يُدفع كل شهر سواء بعت أو لا.</p>
-    </div>
-  </div>
-  </div>
-
+    </div></div>
 </div></body></html>
