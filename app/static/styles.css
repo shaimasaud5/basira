@@ -837,9 +837,9 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 @media (max-width: 800px) { .lp-hero-text .bg-logo { width: 320px; opacity: .1; } }
 
 /* ===== المثال: بطاقات عائمة متداخلة بدل لوحة مصغّرة (من المكوّنات الحقيقية نفسها) ===== */
-@media (min-width: 961px) {
-  .lp-hero-grid { grid-template-columns: minmax(0, 1fr) 460px; gap: 56px; }
-  .lp-demo { position: relative; width: 460px; height: 535px; max-width: none; zoom: 1; padding: 0; background: none; border: 0; box-shadow: none; border-radius: 0; }
+@media (min-width: 961px) { .lp-hero-grid { grid-template-columns: minmax(0, 1fr) 460px; gap: 56px; } }
+@media all {
+  .lp-demo { position: relative; margin-inline: auto; width: 460px; height: 535px; max-width: none; zoom: 1; padding: 0; background: none; border: 0; box-shadow: none; border-radius: 0; }
   .lp-demo .dash-head, .lp-demo .dsec-head, .lp-demo .filters, .lp-demo .showall, .lp-demo .summary::before, .lp-demo .stat.counts { display: none; }
   .lp-demo .summary, .lp-demo .dsec, .lp-demo .dsec-body, .lp-demo .risk-grid { display: contents; }
   .lp-demo .sum-gauge, .lp-demo .stat, .lp-demo .rcard { background: var(--surface); border: 1px solid var(--line); box-shadow: 0 18px 40px rgba(0,0,0,.28); }
@@ -1058,13 +1058,13 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 @media (max-width: 640px) { .lp-cta { padding: 44px 0 48px; } .lp-cta::before { width: 360px; height: 240px; } }
 @media (prefers-reduced-motion: reduce) { .lp-cta::before, .lp-cta-btn { animation: none; } }
 
-/* ===== الجوال: معاينة التقرير مختصرة بدل تقرير طويل ===== */
-@media (max-width: 640px) {
-  .lp-demo { max-height: 560px; overflow: hidden; padding: 10px; -webkit-mask-image: linear-gradient(#000 78%, transparent); mask-image: linear-gradient(#000 78%, transparent); }
-  .lp-demo-cap { margin-top: 6px; }
-}
 @media (max-width: 640px) {
   #features .lp-feat { flex-basis: 215px; min-height: 0; padding: 24px 14px 22px; border-radius: 26px; }
   #features .lp-feat .lp-ico { width: 52px; height: 52px; }
   #features .lp-feat h3 { margin: 14px 0 6px; }
 }
+
+/* الجوال: نفس تركيبة البطاقات العائمة مصغّرة لتناسب العرض */
+@media (max-width: 960px) { .lp-demo { zoom: .78; } .lp-demo-wrap { display: flex; flex-direction: column; align-items: center; } }
+@media (max-width: 420px) { .lp-demo { zoom: .7; } }
+@media (max-width: 360px) { .lp-demo { zoom: .62; } }
