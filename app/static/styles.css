@@ -1157,3 +1157,11 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
   .lp-section { scroll-margin-top: calc(var(--topbar-h) + 44px); }
   .lp-hero { padding-top: 112px; }
 }
+
+/* الجوال: بدون شريط التبويبات، والمساعد بأيقونة شات صغيرة تفتح المحادثة بدرج */
+.app-ask { display: none; border: 0; background: none; padding: 0; cursor: pointer; }
+@media (max-width: 1000px) {
+  .tabbar { display: none !important; }
+  .home { padding-bottom: 24px; }
+  .app-ask { display: flex; }
+}

@@ -16,6 +16,7 @@ function openAssistant() {
   $("lp-drawer").appendChild($("chat"));   // نفس المحادثة (بكل ما فيها) تنتقل مؤقتًا للدرج
   show($("lp-drawer"), true);
   show($("lp-ask"), false);
+  show($("app-ask"), false);
   $("chat-input").focus();
 }
 function closeAssistant() {
@@ -23,6 +24,7 @@ function closeAssistant() {
   if ($("chat").parentNode !== grid) grid.insertBefore($("chat"), grid.firstChild);   // ترجع مكانها في التطبيق
   show($("lp-drawer"), false);
   show($("lp-ask"), true);
+  show($("app-ask"), location.hash === "#/app");
 }
 
 /* ---------- التنقل: الصفحة الرئيسية (#/) والتطبيق (#/app) ---------- */
@@ -33,7 +35,8 @@ function route() {
   show($("nav-home"), inApp);
   show($("lp-nav"), !inApp);
   show($("lp-top-cta"), !inApp);
-  if (inApp) closeAssistant();
+  closeAssistant();
+  show($("app-ask"), inApp);
   window.scrollTo({ top: 0 });
 }
 
@@ -91,7 +94,7 @@ async function submit(payload) {
   app.report = result.data;
   app.project = { activity: payload.activity, city: payload.city };
   renderDashboard($("stage-dash"), app.report, app.project, {
-    onAsk: (question) => { setTab("chat"); ask(question); },
+    onAsk: (question) => { if (matchMedia("(max-width: 1000px)").matches) openAssistant(); else setTab("chat"); ask(question); },
     onEdit: () => { setStage("input"); },
   });
   setStage("dash");
@@ -118,6 +121,7 @@ function setChat(open) {
 }
 $("chat-close").addEventListener("click", () => { if ($("lp-drawer").contains($("chat"))) closeAssistant(); else setChat(false); });
 $("chat-open").addEventListener("click", () => setChat(true));
+$("app-ask").addEventListener("click", openAssistant);
 $("tab-work").addEventListener("click", () => setTab("work"));
 $("tab-chat").addEventListener("click", () => setTab("chat"));
 
