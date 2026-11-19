@@ -300,7 +300,7 @@ export function renderDashboard(root, report, project, hooks) {
   filters.setAttribute("role", "group");
   filters.setAttribute("aria-label", "تصفية المخاطر حسب الخطورة");
   const risks = section("shield", cards.length > TOP_VISIBLE ? "أهم المخاطر" : "المخاطر", cards.length,
-    "المخاطر اللي لقيناها في عقدك، الأخطر أولاً. اضغط «التفاصيل» لتعرف وش تسوي.", filters);
+    null, filters);
   const grid = el("div", "risk-grid");
   risks.body.append(grid);
   let active = null;
