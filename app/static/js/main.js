@@ -33,43 +33,12 @@ function initLanding() {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
-  // شريط المميزات المتحرك على الجوال: نسخة ثانية من البطاقات لتكرار سلس (تظهر بالـCSS على الشاشات الصغيرة فقط)
-  const feats = document.querySelector("#features .lp-feats");
-  if (feats) [...feats.children].forEach((li) => {
-    const c = li.cloneNode(true);
-    c.classList.remove("lp-reveal");
-    c.classList.add("lp-clone");
-    c.setAttribute("aria-hidden", "true");
-    feats.appendChild(c);
-  });
-  autoScrollFeatures(feats);
   if (!("IntersectionObserver" in window)) return;
   document.documentElement.classList.add("lp-js");
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
   }, { rootMargin: "0px 0px -8% 0px" });
   document.querySelectorAll(".lp-reveal").forEach((n) => io.observe(n));
-}
-
-/* شريط المميزات على الجوال: يتحرك لحاله، ويوقف إذا لمسه المستخدم (وهو قابل للسحب دائمًا) */
-function autoScrollFeatures(el) {
-  if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const small = matchMedia("(max-width: 1000px)");
-  let pos = 0, paused = false, timer = 0;
-  const pause = () => { paused = true; clearTimeout(timer); };
-  const resume = () => { clearTimeout(timer); timer = setTimeout(() => { pos = el.scrollLeft; paused = false; }, 1800); };
-  ["pointerdown", "touchstart", "wheel"].forEach((ev) => el.addEventListener(ev, pause, { passive: true }));
-  ["pointerup", "touchend", "touchcancel", "pointerleave"].forEach((ev) => el.addEventListener(ev, resume, { passive: true }));
-  let last = performance.now();
-  setInterval(() => {
-    const now = performance.now(), dt = Math.min(now - last, 200);   // بالزمن الحقيقي: السرعة ثابتة
-    last = now;
-    if (!small.matches || paused) return;
-    const half = el.scrollWidth / 2;
-    pos += dt * 0.03;                                                // ~30 بكسل بالثانية
-    if (pos >= half) pos -= half;
-    el.scrollLeft = pos;
-  }, 33);
 }
 
 /* ---------- مراحل شاشة التطبيق ---------- */
