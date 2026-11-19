@@ -1168,3 +1168,8 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 
 /* زر الهيرو الوحيد: بحجمه الطبيعي */
 @media (max-width: 640px) { .lp-cta-row .btn.lg { flex: 0 1 auto; min-width: 200px; padding-inline: 22px; } }
+
+/* زر الرجوع: بأول الهيدر (يمين في العربي)، وسهم يشاور لليمين */
+.nav-back .i { transform: scaleX(-1); }
+.nav-back:hover .i { transform: scaleX(-1) translateX(-3px); }
+.nav-back { margin-inline-end: -4px; }
