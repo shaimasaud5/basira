@@ -20,7 +20,7 @@ def test_landing_is_arabic_rtl_with_the_chosen_copy():
     assert 'dir="rtl"' in page and "بصِيـــرة" in page
     assert "قبل ما توقّع عقد الإيجار" not in page   # الجملة التمهيدية انحذفت
     assert "لا تلتزم بعقد قبل ما تعرف" in page and "وش يترتب عليه</span>" in page
-    assert "ابدأ تحليل عقدك" in page and "اكتشف كيف تعمل بصيرة" in page
+    assert "ابدأ تحليل عقدك" in page and "اكتشف كيف تعمل بصيرة" not in page
     assert "قراءة أولية وليست استشارة قانونية" not in page
 
 
@@ -53,7 +53,8 @@ def test_landing_sections_ctas_and_footer():
                  "تحليل العقد", "تقييم المخاطر", "التحليل المالي", "خصوصية مستنداتك", "التوصيات الذكية", "مساعد بصيرة"):
         assert copy in page
     assert 'class="btn primary lg cta" href="#/app"' in page          # الدعوة الأساسية تدخل التطبيق
-    assert 'href="#how" data-scroll="how"' in page                     # الثانوية تمرّر لقسم «كيف تعمل»
+    assert 'href="#how" data-scroll="how"' in page                     # رابط «كيف تعمل» في الهيدر
+    assert "الرئيسية" not in page.split('id="lp-nav"')[1].split("</nav>")[0]
     assert page.count('href="#/app"') >= 3
     assert "بصيرة تقدم قراءة أولية للعقود وتحليلًا ماليًا استرشاديًا، ولا تُعد بديلًا عن الاستشارة القانونية المتخصصة." in page
     assert 'class="lp-footer"' in page
