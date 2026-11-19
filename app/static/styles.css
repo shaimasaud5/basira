@@ -9,7 +9,6 @@
   --bg: #f9f9f7; --surface: #fcfcfb; --surface-2: #f2f2ee; --ink: #0b0b0b; --ink-2: #52514e; --ink-3: #6f6d68;
   --line: #e1e0d9; --line-strong: #c3c2b7;
   /* هوية بصيرة */
-  --logo-dot: #38bdf8;
   --brand: #0284c7; --brand-600: #0369a1; --brand-050: #e0f2fe; --on-brand: #ffffff;
   /* ألوان الحالة (ثابتة، تُعرض دايماً مع أيقونة وكلمة) */
   --crit: #d03b3b; --warn: #fab219; --good: #0ca30c;
