@@ -61,7 +61,8 @@ def test_journey_lists_steps_in_order(monkeypatch):
     client.post("/chat", json={"question": "هلا"}, headers={"user-agent": UA_PHONE})
     vid = client.get("/admin/api/visitors", auth=("x", "s3cret")).json()[0]["id"]
     steps = client.get(f"/admin/api/visitor/{vid}", auth=("x", "s3cret")).json()
-    assert [s["label"] for s in steps] == ["فتح الصفحة", "رسالة للمساعد"]
+    assert [s["label"].split(":")[0].split(" (")[0] for s in steps] == ["فتح الصفحة", "رسالة للمساعد"]
+    assert "جوال" in steps[0]["label"] and "قبل التحليل" in steps[1]["label"]
 
 
 def test_name_is_linked_to_the_visitor_in_the_admin_only(monkeypatch, caplog):
@@ -81,3 +82,41 @@ def test_name_is_linked_to_the_visitor_in_the_admin_only(monkeypatch, caplog):
 def test_overlong_name_is_rejected_with_arabic_error():
     r = client.post("/analyze", json={"first_name": "ا" * 61, "activity": "كوفي", "city": "جدة"})
     assert r.status_code == 422 and any("الاسم" in m for m in r.json()["errors"])
+
+
+def test_people_health_and_export_with_model_block(monkeypatch):
+    from app import llm
+    monkeypatch.setenv("ADMIN_PASSWORD", "s3cret")
+    auth = ("x", "s3cret")
+    body = {"first_name": "سارة", "last_name": "العتيبي", "activity": "مطعم", "city": "الرياض",
+            "monthly_rent": 10000, "monthly_revenue": 40000, "lease_months": 12}
+    client.get("/", headers={"user-agent": UA_PHONE})
+    assert client.post("/analyze", json=body, headers={"user-agent": UA_PHONE}).status_code == 200
+    # الموديل رفضها (زحمة) أثناء محادثتها: لازم ينربط بزائرها
+    from app import telemetry
+    def fake(system, user, temperature=0):
+        telemetry.record("llm", telemetry.current_visitor(), status=429, ms=50, meta={"key": 1, "what": "محادثة"})
+        raise llm.LLMError("مشغول")
+    monkeypatch.setattr(llm, "chat_json", fake)
+    # الدالة answer تستدعي llm.chat_json عبر الوحدة
+    client.post("/chat", json={"question": "هلا"}, headers={"user-agent": UA_PHONE})
+
+    people = client.get("/admin/api/people", auth=auth).json()
+    assert people[0]["name"] == "سارة العتيبي" and people[0]["analyses"] == 1 and people[0]["model_blocked"] >= 1
+    steps = client.get("/admin/api/person", params={"name": "سارة العتيبي"}, auth=auth).json()
+    texts = " | ".join(s["label"] for s in steps)
+    assert "مطعم" in texts and "الإيجار 25% من الإيراد" in texts and "رفضه Groq" in texts
+    ov = client.get("/admin/api/overview", auth=auth).json()
+    assert ov["health"]["llm_bad"] >= 1 and ov["health"]["blocked_people"][0][0] == "سارة العتيبي"
+    assert ov["funnel"][0] == ["فتح الصفحة", 1] and ov["storage"] == "sqlite"
+    csv = client.get("/admin/api/export.csv", auth=auth)
+    assert csv.status_code == 200 and "سارة العتيبي" in csv.text
+    assert client.get("/admin/api/export.csv").status_code in (401, 404)
+
+
+def test_notes_never_hold_contract_text_or_ip():
+    secret = "نص-سري-في-العقد-12345"
+    client.post("/analyze", json={"activity": "مقهى", "city": "جدة", "contract_text": secret + " الإيجار السنوي 120000 ريال"})
+    from app import telemetry
+    dump = str(telemetry._rows("SELECT meta, path, visitor FROM events"))
+    assert secret not in dump and "testclient" not in dump and "127.0.0.1" not in dump

@@ -1,4 +1,5 @@
 """سيرفر FastAPI: يربط التحقق والحسابات والتقرير."""
+import contextvars
 import logging
 import os
 import secrets
@@ -8,11 +9,11 @@ from pathlib import Path
 
 from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
 
-from app import telemetry
+from app import llm, telemetry
 from app.ai_risks import accept_suggestions, request_suggestions
 from app.chat import ChatInput, answer
 from app.contract import extract_contract, looks_like_injection
@@ -66,14 +67,14 @@ async def track_usage(request: Request, call_next):
     if path.startswith(SKIP_TRACKING):
         return await call_next(request)
     started = time.perf_counter()
-    response = await call_next(request)
-    ms = int((time.perf_counter() - started) * 1000)
     ua = request.headers.get("user-agent", "")
     vid = telemetry.visitor_id(request.client.host if request.client else "", ua)
-    meta: dict = {}
+    meta = telemetry.bind(vid)  # الموديل والمعالجات تضيف ملاحظاتها هنا (أرقام فقط)
+    response = await call_next(request)
+    ms = int((time.perf_counter() - started) * 1000)
     if request.method == "GET" and path == "/":
-        meta = {**telemetry.describe_client(ua), "country": request.headers.get("cf-ipcountry", ""),
-                "source": telemetry.source_of(request.headers.get("referer", ""), request.query_params.get("utm_source", ""))}
+        meta.update({**telemetry.describe_client(ua), "country": request.headers.get("cf-ipcountry", ""),
+                "source": telemetry.source_of(request.headers.get("referer", ""), request.query_params.get("utm_source", ""))})
     telemetry.record("req", vid, request.method, path, response.status_code, ms, meta)
     return response
 
@@ -102,7 +103,7 @@ def admin_js():
 
 @app.get("/admin/api/summary", include_in_schema=False, dependencies=[Depends(require_admin)])
 def admin_summary(days: int = 7):
-    return telemetry.summary(max(1, min(days, 90)))
+    return telemetry.summary(max(1, min(days, 3650)))
 
 
 @app.get("/admin/api/visitors", include_in_schema=False, dependencies=[Depends(require_admin)])
@@ -112,7 +113,33 @@ def admin_visitors(limit: int = 60):
 
 @app.get("/admin/api/visitor/{vid}", include_in_schema=False, dependencies=[Depends(require_admin)])
 def admin_visitor(vid: str):
-    return telemetry.journey(vid[:32])
+    return telemetry.visitor_journey(vid[:32])
+
+
+@app.get("/admin/api/overview", include_in_schema=False, dependencies=[Depends(require_admin)])
+def admin_overview(days: int = 7):
+    days = max(1, min(days, 3650))
+    return {"summary": telemetry.summary(days), "health": telemetry.health(days), "funnel": telemetry.funnel(days),
+            "keys_now": llm.key_status(), "storage": "postgres" if telemetry.using_postgres() else "sqlite"}
+
+
+@app.get("/admin/api/people", include_in_schema=False, dependencies=[Depends(require_admin)])
+def admin_people():
+    return telemetry.people()
+
+
+@app.get("/admin/api/person", include_in_schema=False, dependencies=[Depends(require_admin)])
+def admin_person(name: str):
+    return telemetry.person_journey(name[:130])
+
+
+@app.get("/admin/api/export.csv", include_in_schema=False, dependencies=[Depends(require_admin)])
+def admin_export():
+    import csv, io
+    buf = io.StringIO()
+    csv.writer(buf).writerows(telemetry.export_rows())
+    return Response("\ufeff" + buf.getvalue(), media_type="text/csv; charset=utf-8",
+                    headers={"Content-Disposition": 'attachment; filename="basira-usage.csv"'})
 
 
 app.mount("/static", RevalidatingStaticFiles(directory=BASE_DIR / "static"), name="static")
@@ -143,11 +170,15 @@ async def rate_limited(request: Request, exc: RateLimited):
 @app.post("/contract/preview", dependencies=[Depends(limit_extract)])
 def contract_preview(file: UploadFile = File(...)):
     """يستخرج نص العقد من الملف ويخفي الهوية ويرجّع النص للمعاينة. ما نحفظ الملف ولا نسجّل محتواه."""
+    raw = file.file.read(MAX_FILE_BYTES + 1)
+    telemetry.note(ext=(file.filename or "").rsplit(".", 1)[-1].lower()[:5], size_kb=round(len(raw) / 1024))
     try:
-        text = read_contract(file.filename or "", file.file.read(MAX_FILE_BYTES + 1))
+        text = read_contract(file.filename or "", raw)
     except FileError as e:
+        telemetry.note(error=str(e)[:120])
         return JSONResponse(status_code=422, content={"errors": [str(e)]})
     clean, counts = redact(text)
+    telemetry.note(chars=len(clean), redacted=sum(v for v in counts.values() if isinstance(v, int)))
     logger.info("preview: chars=%d redacted=%s", len(text), counts)  # أطوال وأعداد فقط
     return {"text": clean, "chars": len(clean), "redacted": counts}
 
@@ -164,9 +195,15 @@ def contract_redact(payload: RedactInput):
 def chat(payload: ChatInput, _: None = Depends(limit_chat)):
     # الخصوصية: ما نسجّل السؤال ولا الرد ولا العقد، فقط الأطوال
     logger.info("chat: question_len=%d history=%d", len(payload.question), len(payload.history))
+    telemetry.note(question_len=len(payload.question), history=len(payload.history),
+                   mode="report" if payload.has_report else "guide")
+    llm._purpose.set("محادثة")
     try:
-        return answer(payload)
+        result = answer(payload)
+        telemetry.note(answer_len=len(result.get("answer", "")))
+        return result
     except LLMError as e:
+        telemetry.note(error="الموديل غير متاح")
         return JSONResponse(status_code=503, content={"errors": [str(e)]})
 
 
@@ -179,6 +216,7 @@ def analyze(project: ProjectInput, request: Request):
         vid = telemetry.visitor_id(request.client.host if request.client else "", ua)
         telemetry.record("identity", vid, meta={"first": project.first_name or "", "last": project.last_name or ""})
     logger.info("analyze: contract_len=%d", len(project.contract_text or ""))
+    llm._purpose.set("تحليل")
 
     facts = None
     clean_text = None
@@ -193,9 +231,17 @@ def analyze(project: ProjectInput, request: Request):
                 "تجاهلناها، وراجع هذا البند في عقدك بنفسك."
             )
         # الطلبان للموديل (استخراج بنود العقد + اقتراحات المخاطر) مستقلان، فنشغّلهم بالتوازي عشان نوفّر الوقت
+        def _in_ctx(purpose, fn, *args):
+            ctx = contextvars.copy_context()  # يحافظ على ربط الزائر داخل خيوط الموديل
+            def run():
+                llm._purpose.set(purpose)
+                return fn(*args)
+            return ctx.run, run
         with ThreadPoolExecutor(max_workers=2) as pool:
-            extraction = pool.submit(extract_contract, clean_text)
-            suggestions = pool.submit(request_suggestions, project, clean_text)
+            runner, job = _in_ctx("استخراج بنود العقد", extract_contract, clean_text)
+            extraction = pool.submit(runner, job)
+            runner, job = _in_ctx("اقتراحات المخاطر", request_suggestions, project, clean_text)
+            suggestions = pool.submit(runner, job)
         suggestion_error: LLMError | None = None
         try:
             facts = extraction.result()
@@ -225,4 +271,13 @@ def analyze(project: ProjectInput, request: Request):
             ai_cards, _ = accept_suggestions(request_suggestions(effective, None), effective, None, None)
         except LLMError as e:
             warnings.append(f"تعذّر توليد الاقتراحات الإضافية: {e}")
-    return build_report(cards, missing, notes + warnings, ai_cards, build_metrics(effective, facts))
+    report = build_report(cards, missing, notes + warnings, ai_cards, build_metrics(effective, facts))
+    shown = report["top"] + report["more"]
+    ratio = None
+    if effective.monthly_rent and effective.monthly_revenue:
+        ratio = round(effective.monthly_rent / effective.monthly_revenue * 100)
+    telemetry.note(activity=project.activity[:40], city=project.city[:30], lease_months=effective.lease_months,
+                   rent_ratio=ratio, contract_chars=len(clean_text or ""), cards=len(shown), ai_cards=len(ai_cards),
+                   high=sum(1 for c in shown if c.severity == "high"), warnings=len(warnings),
+                   titles=[c.title[:40] for c in shown[:6]])
+    return report

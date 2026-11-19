@@ -21,3 +21,7 @@ services:
         sync: false   # احتياطي (اختياري)
       - key: ADMIN_PASSWORD
         sync: false   # كلمة سر لوحة المراقبة /admin (بدونها اللوحة معطّلة)
+      - key: DATABASE_URL
+        sync: false   # رابط Postgres (Neon) لحفظ بيانات لوحة المراقبة دائمًا
+      - key: TELEMETRY_SECRET
+        sync: false   # أي نص عشوائي طويل: يثبّت معرّفات الزوار اليومية عبر إعادة التشغيل

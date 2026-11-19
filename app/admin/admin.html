@@ -30,20 +30,35 @@ tr.v { cursor:pointer; } tr.v:hover { background: var(--brand-050); }
 .scroll { overflow-x:auto; }
 .steps { list-style:none; margin:0; padding:0; } .steps li { display:flex; gap:12px; padding:6px 0; border-bottom:1px dashed var(--line); }
 .steps time { color: var(--ink-3); min-width: 64px; } .bad-t { color:#c0524a; font-weight:700; }
+.ok-t { color:#2f8a5b; font-weight:700; } .warn-t { color:#b7791f; font-weight:700; }
+.steps li.model span:nth-child(2) { color: var(--brand-600); } .steps li.info span:nth-child(2) { font-weight:700; }
+.hello-in { display:flex; gap:8px; margin:6px 0 14px; } .hello-in input { padding:8px 12px; border:1px solid var(--line-strong); border-radius:12px; font:inherit; background:var(--surface); color:var(--ink); }
+.fbar { height:10px; border-radius:6px; background:var(--brand); opacity:.85; }
 .note { color: var(--ink-3); font-size:.85rem; }
 </style>
 </head>
 <body>
 <div class="ad">
-  <h1>لوحة المراقبة</h1>
-  <p class="sub">أرقام الاستخدام والأداء. لا تُخزَّن نصوص العقود ولا رسائل المحادثة ولا عناوين IP. الزائر يظهر بمعرّف مجهول يتغيّر كل يوم.</p>
+  <h1 id="hello">لوحة المراقبة</h1>
+  <p class="sub">أرقام الاستخدام والأداء. لا تُخزَّن نصوص العقود ولا رسائل المحادثة ولا عناوين IP. الزائر المجهول يظهر بمعرّف يتغيّر كل يوم، ومن عرّف نفسه يظهر باسمه.</p>
   <div class="ad-bar" id="range"></div>
+  <div class="box" id="storage" hidden></div>
   <div class="kpis" id="kpis"></div>
-  <div class="box"><h2>الطلبات آخر 24 ساعة</h2><div class="bars" id="hourly"></div></div>
-  <div class="grid2" id="tops"></div>
-  <div class="box"><h2>الزوار</h2><div class="scroll"><table id="visitors"></table></div><p class="note">اضغط على أي زائر لترى خطواته داخل المنصة بالترتيب.</p></div>
+
+  <div class="box"><h2>صحة الموديل (Groq)</h2><div id="model"></div></div>
+  <div class="grid2">
+    <div class="box"><h2>مسار الاستخدام (قمع)</h2><div id="funnel"></div></div>
+    <div class="box"><h2>الطلبات آخر 24 ساعة</h2><div class="bars" id="hourly"></div></div>
+  </div>
+  <div class="box"><h2>أداء النظام حسب الخطوة</h2><div class="scroll"><table id="endpoints"></table></div></div>
+
+  <div class="box"><h2>الأشخاص (من عرّفوا بأسمائهم)</h2><div class="scroll"><table id="people"></table></div><p class="note">اضغط على اسم لترى كل ما فعله خطوة بخطوة، عبر كل الأيام.</p></div>
   <div class="box" id="journey-box" hidden><h2 id="journey-title"></h2><ul class="steps" id="journey"></ul></div>
+
+  <div class="box"><h2>زوار مجهولون (بدون اسم)</h2><div class="scroll"><table id="visitors"></table></div><p class="note">اضغط على أي صف لترى خطواته.</p></div>
+  <div class="grid2" id="tops"></div>
   <div class="box"><h2>آخر الأخطاء</h2><div id="errors"></div></div>
+  <p><a id="export" class="btn sm" href="/admin/api/export.csv" download>تنزيل كل البيانات (CSV)</a></p>
 </div>
 <script type="module" src="/admin/app.js"></script>
 </body>

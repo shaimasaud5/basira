@@ -3,6 +3,7 @@
 
 الخصوصية: لا نسجّل النص المرسل ولا رد الموديل، الحالة فقط.
 """
+import contextvars
 import json
 import logging
 import os
@@ -184,9 +185,20 @@ def chat_json(system: str, user: str, temperature: float = 0) -> dict:
     raise last
 
 
+_purpose: "contextvars.ContextVar[str]" = contextvars.ContextVar("llm_purpose", default="")
+
+
+def key_status() -> list[dict]:
+    """حالة كل مفتاح الحين: جاهز أو في فترة راحة (بدون عرض المفتاح نفسه)."""
+    now = time.monotonic()
+    with _cooldown_lock:
+        return [{"key": i + 1, "ready": _cooldown.get(k, 0.0) <= now, "wait_s": max(0, int(_cooldown.get(k, 0.0) - now))}
+                for i, k in enumerate(api_keys())]
+
+
 def _track(status: int, started: float, key_number: int) -> None:
     if telemetry:
-        telemetry.record("llm", "-", status=status, ms=int((time.perf_counter() - started) * 1000), meta={"key": key_number})
+        telemetry.record("llm", telemetry.current_visitor(), status=status, ms=int((time.perf_counter() - started) * 1000), meta={"key": key_number, "what": _purpose.get()})
 
 
 def _chat_json_with(key: str, base: str, model: str, system: str, user: str, temperature: float) -> dict:

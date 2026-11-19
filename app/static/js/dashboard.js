@@ -155,7 +155,6 @@ function summaryCard(metrics, cards, onEdit) {
 }
 
 const SEV_LEVEL = { high: 3, medium: 2, low: 1 };
-const showTrust = (card, isAi) => !isAi && Boolean(card.trust_label) && card.trust_label.includes("موثّق");   // نعرض علامة «موثّق» فقط
 
 function firstSentence(text, limit = 130) {
   const first = String(text).split(/(?<=[.!؟])\s/)[0].trim();
@@ -185,11 +184,6 @@ function riskCard(card, isAi, openDetail) {
   more.addEventListener("click", () => openDetail(card, isAi));
 
   const foot = el("div", "rc-foot");
-  if (showTrust(card, isAi)) {
-    const trust = el("span", "trust");
-    trust.append(icon("check"), document.createTextNode(card.trust_label));
-    foot.append(trust);
-  }
   foot.append(more);
   box.append(top, el("h3", "", card.title), el("p", "rc-why", firstSentence(card.why)), foot);
   return box;
@@ -226,11 +220,6 @@ function detailDialog(onAsk) {
     proof.append(el("h4", "", "الدليل"), el("blockquote", "evidence", card.evidence));
 
     const foot = el("div", "dlg-foot");
-    if (showTrust(card, isAi)) {
-      const trust = el("span", "trust");
-      trust.append(icon("check"), document.createTextNode(card.trust_label));
-      foot.append(trust);
-    }
     const ask = el("button", "btn primary", "اسأل بصِيـــرة عن هذا الخطر");
     ask.type = "button";
     ask.prepend(icon("chat"));
@@ -246,13 +235,14 @@ function section(iconName, title, count, hint, tools) {
   const box = el("section", "dsec");
   const head = el("header", "dsec-head");
   const ico = el("span", "dsec-ico");
-  ico.append(icon(iconName));
+  if (iconName) ico.append(icon(iconName));
   const text = el("div", "dsec-text");
   const h = el("h2", "", title);
   if (count !== null) h.append(el("span", "count", String(count)));
   text.append(h);
   if (hint) text.append(el("p", "hint", hint));
-  head.append(ico, text);
+  if (iconName) head.append(ico);
+  head.append(text);
   if (tools) head.append(tools);
   const body = el("div", "dsec-body");
   box.append(head, body);
@@ -299,7 +289,7 @@ export function renderDashboard(root, report, project, hooks) {
   const filters = el("div", "filters");
   filters.setAttribute("role", "group");
   filters.setAttribute("aria-label", "تصفية المخاطر حسب الخطورة");
-  const risks = section("shield", cards.length > TOP_VISIBLE ? "أهم المخاطر" : "المخاطر", cards.length,
+  const risks = section(null, cards.length > TOP_VISIBLE ? "أهم المخاطر" : "المخاطر", cards.length,
     null, filters);
   const grid = el("div", "risk-grid");
   risks.body.append(grid);

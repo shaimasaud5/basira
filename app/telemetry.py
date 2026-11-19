@@ -2,8 +2,10 @@
 
 الزائر يُعرَّف بمعرّف مجهول = هاش (ملح يومي سري + IP + المتصفح). الـIP نفسه ما يُحفظ أبدًا،
 والمعرّف يتغيّر كل يوم، فما نقدر نربط زائر اليوم بزائر أمس ولا نعرف مين هو.
-التخزين: SQLite محلي (TELEMETRY_DB). على الخطة المجانية في Render يتصفّر مع كل نشر؛ للحفظ الدائم نبدّل التخزين لاحقًا.
+التخزين: لو DATABASE_URL موجود (Postgres مثل Neon) تُحفظ البيانات دائمًا ولا تُحذف أبدًا.
+بدونه نستخدم SQLite محلي (TELEMETRY_DB) وعلى الخطة المجانية في Render يتصفّر مع كل نشر.
 """
+import contextvars
 import hashlib
 import json
 import os
@@ -39,13 +41,85 @@ LABELS = {
 }
 
 
-def _db() -> sqlite3.Connection:
+DATABASE_URL = os.environ.get("DATABASE_URL", "")
+PG_SCHEMA = """
+CREATE TABLE IF NOT EXISTS events (
+  id BIGSERIAL PRIMARY KEY,
+  ts DOUBLE PRECISION NOT NULL, day TEXT NOT NULL, visitor TEXT NOT NULL,
+  kind TEXT NOT NULL, method TEXT, path TEXT, status INTEGER, ms INTEGER, meta TEXT
+);
+CREATE INDEX IF NOT EXISTS ev_day ON events(day);
+CREATE INDEX IF NOT EXISTS ev_visitor ON events(visitor, ts);
+"""
+
+
+def using_postgres() -> bool:
+    return bool(DATABASE_URL)
+
+
+def _db():
+    """اتصال واحد مشترك (يُنشأ عند أول استخدام). Postgres لو DATABASE_URL موجود، وإلا SQLite."""
     global _conn
     if _conn is None:
-        Path(DB_PATH).parent.mkdir(parents=True, exist_ok=True)
-        _conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-        _conn.executescript(SCHEMA)
+        if DATABASE_URL:
+            import psycopg  # noqa: PLC0415
+            _conn = psycopg.connect(DATABASE_URL, autocommit=True, connect_timeout=8)
+            with _conn.cursor() as cur:
+                cur.execute(PG_SCHEMA)
+        else:
+            Path(DB_PATH).parent.mkdir(parents=True, exist_ok=True)
+            _conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+            _conn.executescript(SCHEMA)
     return _conn
+
+
+def _run(sql: str, args: tuple = (), fetch: bool = False):
+    """ينفّذ استعلامًا على القاعدة المختارة. لو انقطع اتصال Postgres نعيد الاتصال مرة وحدة."""
+    global _conn
+    for attempt in (0, 1):
+        try:
+            conn = _db()
+            if DATABASE_URL:
+                with conn.cursor() as cur:
+                    cur.execute(sql.replace("?", "%s"), args)
+                    return cur.fetchall() if fetch else None
+            cur = conn.execute(sql, args)
+            if fetch:
+                return cur.fetchall()
+            conn.commit()
+            return None
+        except Exception:  # noqa: BLE001
+            if not DATABASE_URL or attempt:
+                raise
+            try:
+                _conn.close()
+            except Exception:  # noqa: BLE001
+                pass
+            _conn = None
+
+
+# ---- سياق الطلب الحالي: يربط أحداث الموديل والملاحظات بالزائر بدون ما نمرّرها يدويًا ----
+_visitor_var: contextvars.ContextVar[str] = contextvars.ContextVar("visitor", default="-")
+_notes_var: contextvars.ContextVar[dict | None] = contextvars.ContextVar("notes", default=None)
+
+
+def bind(visitor: str) -> dict:
+    """يربط الطلب الحالي بزائر ويرجّع قاموس الملاحظات (يُحفظ مع حدث الطلب)."""
+    notes: dict = {}
+    _visitor_var.set(visitor)
+    _notes_var.set(notes)
+    return notes
+
+
+def current_visitor() -> str:
+    return _visitor_var.get()
+
+
+def note(**kv) -> None:
+    """يضيف ملاحظات (أرقام وكلمات قصيرة فقط، مو نصوص المستخدم) على الطلب الحالي."""
+    notes = _notes_var.get()
+    if notes is not None:
+        notes.update(kv)
 
 
 def reset(path: str | None = None) -> None:
@@ -53,7 +127,10 @@ def reset(path: str | None = None) -> None:
     global _conn, DB_PATH
     with _lock:
         if _conn is not None:
-            _conn.close()
+            try:
+                _conn.close()
+            except Exception:  # noqa: BLE001
+                pass
         _conn = None
         if path:
             DB_PATH = path
@@ -102,19 +179,15 @@ def record(kind: str, visitor: str, method: str = "", path: str = "", status: in
     try:
         ts = time.time()
         with _lock:
-            _db().execute(
-                "INSERT INTO events (ts, day, visitor, kind, method, path, status, ms, meta) VALUES (?,?,?,?,?,?,?,?,?)",
-                (ts, _day(ts), visitor, kind, method, path, status, ms, json.dumps(meta or {}, ensure_ascii=False)),
-            )
-            _db().commit()
+            _run("INSERT INTO events (ts, day, visitor, kind, method, path, status, ms, meta) VALUES (?,?,?,?,?,?,?,?,?)",
+                 (ts, _day(ts), visitor, kind, method, path, status, ms, json.dumps(meta or {}, ensure_ascii=False)))
     except Exception:  # noqa: BLE001
         pass
 
 
-def _rows(sql: str, args: tuple = ()) -> list[sqlite3.Row]:
+def _rows(sql: str, args: tuple = ()) -> list:
     with _lock:
-        cur = _db().execute(sql, args)
-        return cur.fetchall()
+        return _run(sql, args, fetch=True) or []
 
 
 def _pct(values: list[int], q: float) -> int | None:
@@ -184,7 +257,7 @@ def summary(days: int = 7) -> dict:
 def visitors(limit: int = 60) -> list[dict]:
     names = {(d, vid): json.loads(meta or "{}") for d, vid, meta in
              _rows("SELECT day, visitor, meta FROM events WHERE kind = 'identity' ORDER BY ts")}
-    rows = _rows("SELECT ts, day, visitor, kind, method, path, status, ms, meta FROM events WHERE kind = 'req' ORDER BY ts DESC LIMIT 4000")
+    rows = _rows("SELECT ts, day, visitor, kind, method, path, status, ms, meta FROM events WHERE kind = 'req' ORDER BY ts DESC LIMIT 50000")
     out: dict[tuple, dict] = {}
     for ts, day, vid, _k, method, path, status, ms, meta in rows:
         v = out.setdefault((day, vid), {"id": vid, "day": day, "first": ts, "last": ts, "views": 0, "uploads": 0, "analyses": 0,
@@ -220,3 +293,213 @@ def journey(vid: str) -> list[dict]:
             continue
         steps.append({"time": ts, "label": label, "status": status, "ms": ms, "meta": json.loads(meta or "{}")})
     return steps
+
+
+# ---------- تقارير مفصّلة للوحة ----------
+def _name_of(meta: dict) -> str:
+    return " ".join(filter(None, [meta.get("first"), meta.get("last")])).strip()
+
+
+def _names_by_visitor() -> dict[tuple, str]:
+    out: dict[tuple, str] = {}
+    for day, vid, meta in _rows("SELECT day, visitor, meta FROM events WHERE kind = 'identity' ORDER BY ts"):
+        n = _name_of(json.loads(meta or "{}"))
+        if n:
+            out[(day, vid)] = n
+    return out
+
+
+def _step_text(method: str, path: str, status, meta: dict) -> str:
+    """وصف مفصّل بالعربي للخطوة (من الأرقام فقط، بدون أي نص للمستخدم)."""
+    if method == "GET" and path == "/":
+        bits = [meta.get("device"), meta.get("browser"), meta.get("country"), ("من " + meta["source"]) if meta.get("source") not in (None, "", "مباشر") else "دخول مباشر"]
+        return "فتح الصفحة" + (" (" + "، ".join(b for b in bits if b) + ")" if any(bits) else "")
+    if path == "/contract/preview":
+        if meta.get("error"):
+            return f"حاول يرفع عقد وفشل: {meta['error']}"
+        bits = [f"ملف {meta['ext']}" if meta.get("ext") else "", f"{meta['size_kb']} ك.ب" if meta.get("size_kb") is not None else "",
+                f"{meta['chars']} حرف" if meta.get("chars") is not None else "",
+                f"أُخفي {meta['redacted']} بيان شخصي" if meta.get("redacted") else ""]
+        return "رفع عقد (" + "، ".join(b for b in bits if b) + ")"
+    if path == "/analyze":
+        if (status or 0) >= 400:
+            return "طلب تحليل وفشل" + (f": {meta['error']}" if meta.get("error") else "")
+        bits = [meta.get("activity"), meta.get("city"), f"عقد {meta['lease_months']} شهر" if meta.get("lease_months") else "",
+                f"الإيجار {meta['rent_ratio']}% من الإيراد" if meta.get("rent_ratio") is not None else "",
+                f"قرأ عقد ({meta['contract_chars']} حرف)" if meta.get("contract_chars") else "بدون عقد",
+                f"{meta['cards']} بطاقة" if meta.get("cards") is not None else "",
+                f"عالية {meta['high']}" if meta.get("high") else "", f"تحذيرات {meta['warnings']}" if meta.get("warnings") else ""]
+        return "طلب تحليل: " + "، ".join(b for b in bits if b)
+    if path == "/chat":
+        bits = [f"سؤال {meta['question_len']} حرف" if meta.get("question_len") is not None else "",
+                "قبل التحليل (وضع الدليل)" if meta.get("mode") == "guide" else ("عن تقريره" if meta.get("mode") else ""),
+                f"رد {meta['answer_len']} حرف" if meta.get("answer_len") else ""]
+        return "رسالة للمساعد: " + "، ".join(b for b in bits if b) + (" (فشل)" if (status or 0) >= 400 else "")
+    if path == "/contract/redact":
+        return "إخفاء بيانات عقد تجريبي"
+    return ""
+
+
+def _llm_text(status, ms, meta: dict) -> str:
+    key = meta.get("key", "?")
+    what = meta.get("what", "")
+    state = {200: "نجح", 429: "رفضه Groq (زحمة/حد الطلبات)", 401: "المفتاح مرفوض"}.get(status or 0, f"فشل ({status})")
+    return f"الموديل — مفتاح {key}{' · ' + what if what else ''}: {state}"
+
+
+def journey_steps(rows) -> list[dict]:
+    steps = []
+    for ts, kind, method, path, status, ms, meta in rows:
+        m = json.loads(meta or "{}")
+        if kind == "identity":
+            label, tone = "عرّف بنفسه: " + _name_of(m), "info"
+        elif kind == "req":
+            label, tone = _step_text(method, path, status, m), ("bad" if (status or 0) >= 400 else "")
+            if not label:
+                continue
+        elif kind == "llm":
+            label, tone = _llm_text(status, ms, m), ("bad" if status != 200 else "model")
+        else:
+            continue
+        steps.append({"time": ts, "label": label, "status": status, "ms": ms, "tone": tone})
+    return steps
+
+
+def person_journey(person: str) -> list[dict]:
+    """كل خطوات شخص (بالاسم) عبر كل الأيام."""
+    vids = [k for k, n in _names_by_visitor().items() if n == person]
+    steps: list[dict] = []
+    for day, vid in vids:
+        rows = _rows("SELECT ts, kind, method, path, status, ms, meta FROM events WHERE visitor = ? AND day = ? ORDER BY ts", (vid, day))
+        steps += journey_steps(rows)
+    return sorted(steps, key=lambda x: x["time"])
+
+
+def visitor_journey(vid: str) -> list[dict]:
+    return journey_steps(_rows("SELECT ts, kind, method, path, status, ms, meta FROM events WHERE visitor = ? ORDER BY ts", (vid,)))
+
+
+def people(limit: int = 200) -> list[dict]:
+    """كل شخص عرّف بنفسه: مجموع استخدامه عبر الأيام."""
+    names = _names_by_visitor()
+    by_vid = {}
+    for (day, vid), n in names.items():
+        by_vid.setdefault(vid, {})[day] = n
+    rows = _rows("SELECT ts, day, visitor, kind, method, path, status, ms, meta FROM events WHERE kind IN ('req','llm') ORDER BY ts")
+    out: dict[str, dict] = {}
+    for ts, day, vid, kind, method, path, status, ms, meta in rows:
+        n = names.get((day, vid))
+        if not n:
+            continue
+        p = out.setdefault(n, {"name": n, "first": ts, "last": ts, "days": set(), "views": 0, "uploads": 0, "analyses": 0, "analyses_ok": 0,
+                               "chats": 0, "errors": 0, "model_blocked": 0, "ms_total": 0, "device": "", "country": ""})
+        p["first"], p["last"] = min(p["first"], ts), max(p["last"], ts)
+        p["days"].add(day)
+        m = json.loads(meta or "{}") if meta else {}
+        if kind == "llm":
+            if status != 200:
+                p["model_blocked"] += 1
+            continue
+        if (status or 0) >= 400:
+            p["errors"] += 1
+        if method == "GET" and path == "/":
+            p["views"] += 1
+            p["device"], p["country"] = p["device"] or m.get("device", ""), p["country"] or m.get("country", "")
+        elif path == "/contract/preview":
+            p["uploads"] += 1
+        elif path == "/analyze":
+            p["analyses"] += 1
+            if (status or 0) < 400:
+                p["analyses_ok"] += 1
+                p["ms_total"] += ms or 0
+        elif path == "/chat":
+            p["chats"] += 1
+    res = []
+    for p in out.values():
+        p["days"] = len(p["days"])
+        p["avg_analysis_ms"] = int(p["ms_total"] / p["analyses_ok"]) if p["analyses_ok"] else None
+        del p["ms_total"]
+        res.append(p)
+    return sorted(res, key=lambda x: -x["last"])[:limit]
+
+
+def health(days: int = 7) -> dict:
+    """صحة النظام والموديل: أداء كل مسار، توزيع حالات الموديل، المفاتيح، ومن تأثّر."""
+    since = _day(time.time() - (days - 1) * 86400)
+    ev = _rows("SELECT ts, day, visitor, kind, method, path, status, ms, meta FROM events WHERE day >= ? AND kind IN ('req','llm') ORDER BY ts", (since,))
+    names = _names_by_visitor()
+    endpoints: dict[str, dict] = {}
+    for ts, day, vid, kind, method, path, status, ms, meta in ev:
+        if kind != "req" or (method, path) not in LABELS:
+            continue
+        e = endpoints.setdefault(f"{method} {path}", {"label": LABELS[(method, path)], "n": 0, "err": 0, "ms": []})
+        e["n"] += 1
+        e["err"] += (status or 0) >= 400
+        if ms is not None and (status or 0) < 400:
+            e["ms"].append(ms)
+    endpoint_rows = [{"label": e["label"], "n": e["n"], "err": e["err"], "p50": _pct(e["ms"], .5), "p95": _pct(e["ms"], .95), "max": max(e["ms"]) if e["ms"] else None}
+                     for e in endpoints.values()]
+    keys: dict[str, dict] = {}
+    blocked_people: dict[str, int] = {}
+    events = []
+    for ts, day, vid, kind, method, path, status, ms, meta in ev:
+        if kind != "llm":
+            continue
+        m = json.loads(meta or "{}")
+        k = keys.setdefault(str(m.get("key", "?")), {"key": str(m.get("key", "?")), "ok": 0, "limited": 0, "rejected": 0, "other": 0, "ms": []})
+        if status == 200:
+            k["ok"] += 1
+            k["ms"].append(ms or 0)
+        elif status == 429:
+            k["limited"] += 1
+        elif status == 401:
+            k["rejected"] += 1
+        else:
+            k["other"] += 1
+        if status != 200:
+            who = names.get((day, vid)) or ("زائر مجهول " + vid if vid != "-" else "—")
+            blocked_people[who] = blocked_people.get(who, 0) + 1
+            events.append({"time": ts, "who": who, "key": str(m.get("key", "?")), "status": status, "what": m.get("what", "")})
+    total = sum(k["ok"] + k["limited"] + k["rejected"] + k["other"] for k in keys.values())
+    bad = sum(k["limited"] + k["rejected"] + k["other"] for k in keys.values())
+    return {
+        "days": days, "endpoints": endpoint_rows,
+        "llm_total": total, "llm_bad": bad,
+        "keys": [{**{x: v for x, v in k.items() if x != "ms"}, "avg_ms": int(sum(k["ms"]) / len(k["ms"])) if k["ms"] else None}
+                 for k in sorted(keys.values(), key=lambda x: x["key"])],
+        "blocked_people": sorted(blocked_people.items(), key=lambda x: -x[1])[:15],
+        "blocked_events": events[-20:][::-1],
+    }
+
+
+def funnel(days: int = 7) -> list[list]:
+    """قمع الاستخدام: كم زائر وصل لكل مرحلة."""
+    since = _day(time.time() - (days - 1) * 86400)
+    rows = _rows("SELECT day, visitor, method, path, status FROM events WHERE kind = 'req' AND day >= ?", (since,))
+    steps = {"فتح الصفحة": set(), "رفع عقد": set(), "طلب تحليل": set(), "تحليل ناجح": set(), "سأل المساعد": set()}
+    for day, vid, method, path, status in rows:
+        key = (day, vid)
+        if method == "GET" and path == "/":
+            steps["فتح الصفحة"].add(key)
+        elif path == "/contract/preview":
+            steps["رفع عقد"].add(key)
+        elif path == "/analyze":
+            steps["طلب تحليل"].add(key)
+            if (status or 0) < 400:
+                steps["تحليل ناجح"].add(key)
+        elif path == "/chat":
+            steps["سأل المساعد"].add(key)
+    return [[k, len(v)] for k, v in steps.items()]
+
+
+def export_rows() -> list[list]:
+    """كل الأحداث للتصدير (CSV). أرقام وكلمات قصيرة فقط."""
+    names = _names_by_visitor()
+    rows = _rows("SELECT ts, day, visitor, kind, method, path, status, ms, meta FROM events ORDER BY ts")
+    out = [["الوقت (UTC)", "اليوم", "الاسم", "الزائر", "النوع", "الطلب", "الحالة", "الزمن (مللي)", "وصف"]]
+    for ts, day, vid, kind, method, path, status, ms, meta in rows:
+        m = json.loads(meta or "{}")
+        text = _step_text(method, path, status, m) if kind == "req" else (_llm_text(status, ms, m) if kind == "llm" else _name_of(m))
+        out.append([datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m-%d %H:%M:%S"), day, names.get((day, vid), ""), vid, kind,
+                    f"{method} {path}".strip(), status if status is not None else "", ms if ms is not None else "", text])
+    return out
