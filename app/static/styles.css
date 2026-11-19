@@ -1057,3 +1057,14 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 @keyframes ctaPulse { 0% { box-shadow: 0 10px 28px color-mix(in srgb, var(--brand) 32%, transparent), 0 0 0 0 color-mix(in srgb, var(--brand) 45%, transparent); } 65%, 100% { box-shadow: 0 10px 28px color-mix(in srgb, var(--brand) 32%, transparent), 0 0 0 18px transparent; } }
 @media (max-width: 640px) { .lp-cta { padding: 44px 0 48px; } .lp-cta::before { width: 360px; height: 240px; } }
 @media (prefers-reduced-motion: reduce) { .lp-cta::before, .lp-cta-btn { animation: none; } }
+
+/* ===== الجوال: معاينة التقرير مختصرة بدل تقرير طويل ===== */
+@media (max-width: 640px) {
+  .lp-demo { max-height: 560px; overflow: hidden; padding: 10px; -webkit-mask-image: linear-gradient(#000 78%, transparent); mask-image: linear-gradient(#000 78%, transparent); }
+  .lp-demo-cap { margin-top: 6px; }
+}
+@media (max-width: 640px) {
+  #features .lp-feat { flex-basis: 215px; min-height: 0; padding: 24px 14px 22px; border-radius: 26px; }
+  #features .lp-feat .lp-ico { width: 52px; height: 52px; }
+  #features .lp-feat h3 { margin: 14px 0 6px; }
+}
