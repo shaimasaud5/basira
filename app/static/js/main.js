@@ -11,6 +11,20 @@ import { mountDemo } from "./demo.js";
 const STAGES = { input: "stage-input", loading: "stage-loading", dash: "stage-dash" };
 const app = { report: null, project: null };
 
+/* ---------- مساعد بصيرة على الصفحة الرئيسية: يفتح بجنب الصفحة بدون تنقّل ---------- */
+function openAssistant() {
+  $("lp-drawer").appendChild($("chat"));   // نفس المحادثة (بكل ما فيها) تنتقل مؤقتًا للدرج
+  show($("lp-drawer"), true);
+  show($("lp-ask"), false);
+  $("chat-input").focus();
+}
+function closeAssistant() {
+  const grid = $("home-grid");
+  if ($("chat").parentNode !== grid) grid.insertBefore($("chat"), grid.firstChild);   // ترجع مكانها في التطبيق
+  show($("lp-drawer"), false);
+  show($("lp-ask"), true);
+}
+
 /* ---------- التنقل: الصفحة الرئيسية (#/) والتطبيق (#/app) ---------- */
 function route() {
   const inApp = location.hash === "#/app";
@@ -19,6 +33,7 @@ function route() {
   show($("nav-home"), inApp);
   show($("lp-nav"), !inApp);
   show($("lp-top-cta"), !inApp);
+  if (inApp) closeAssistant();
   window.scrollTo({ top: 0 });
 }
 
@@ -27,6 +42,8 @@ function initLanding() {
   mountDemo($("lp-demo"));
   // فقاعة «اسأل بصيرة»: تظهر مرة وحدة بعد ثانيتين وتختفي بعد خمس ثوانٍ
   const ask = $("lp-ask");
+  ask.addEventListener("click", (ev) => { ev.preventDefault(); openAssistant(); });
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && !$("lp-drawer").classList.contains("hidden")) closeAssistant(); });
   setTimeout(() => ask.classList.add("peek"), 2000);
   setTimeout(() => ask.classList.remove("peek"), 7000);
   document.querySelectorAll("[data-scroll]").forEach((link) => {
@@ -90,13 +107,13 @@ $("nav-reset").addEventListener("click", newAnalysis);
 function setChat(open) {
   $("home-grid").dataset.chat = open ? "open" : "closed";
 }
-$("chat-close").addEventListener("click", () => setChat(false));
+$("chat-close").addEventListener("click", () => { if ($("lp-drawer").contains($("chat"))) closeAssistant(); else setChat(false); });
 $("chat-open").addEventListener("click", () => setChat(true));
 $("tab-work").addEventListener("click", () => setTab("work"));
 $("tab-chat").addEventListener("click", () => setTab("chat"));
 
 $("back-to-report").addEventListener("click", () => setStage("dash"));
-initChat({ onAttach: () => { setStage("input"); openFilePicker(); } });
+initChat({ onAttach: () => { closeAssistant(); if (location.hash !== "#/app") location.hash = "#/app"; setStage("input"); openFilePicker(); } });
 initInput({ onSubmit: submit });
 initProgress();
 initTheme();

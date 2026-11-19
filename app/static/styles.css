@@ -1122,3 +1122,11 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 
 /* خلفية الصفحة الرئيسية بدون شبكة النقاط */
 .landing .bg::after { display: none; }
+
+/* درج المساعد على الصفحة الرئيسية */
+.lp-drawer { position: fixed; left: 16px; bottom: 16px; z-index: 60; width: min(400px, calc(100vw - 32px)); height: min(620px, calc(100dvh - 96px)); border-radius: 22px; box-shadow: 0 24px 60px rgba(0,0,0,.4); animation: drawerIn .3s ease both; }
+.lp-drawer .chat { position: static; height: 100%; min-height: 0; width: 100%; }
+.lp-drawer .chat-head .chat-close { display: inline-flex; }
+@keyframes drawerIn { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (max-width: 640px) { .lp-drawer { left: 8px; right: 8px; bottom: 8px; width: auto; height: calc(100dvh - 80px); } }
+@media (prefers-reduced-motion: reduce) { .lp-drawer { animation: none; } }
