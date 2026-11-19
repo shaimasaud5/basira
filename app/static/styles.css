@@ -1104,3 +1104,9 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 /* الدعوة الأخيرة: زر أصغر، ولوقو الهيرو أنزل قليلًا */
 .lp-cta-btn { min-height: 42px; padding: 8px 26px; font-size: .95rem; border-radius: 12px; }
 @media (max-width: 640px) { .lp-cta-btn { width: auto; min-width: 200px; padding-inline: 24px; } }
+
+/* المميزات: ارتفاع أقل قليلًا ومسافات رأسية أوزن */
+@media (min-width: 1001px) {
+  #features .lp-feat { min-height: 0; padding: 26px 16px 24px; }
+  #features .lp-feat h3 { margin: 16px 0 8px; }
+}
