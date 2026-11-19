@@ -1178,3 +1178,12 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 .lp-cta-row { justify-content: center; }
 .lp-cta-row .btn.lg { min-height: 42px; padding: 8px 24px; font-size: .95rem; }
 @media (max-width: 640px) { .lp-cta-row .btn.lg { min-height: 36px; min-width: 170px; padding: 6px 18px; font-size: .8rem; } }
+
+/* الجوال: الروابط بنفس سطر الهيدر وبدون زر «ابدأ الآن» */
+@media (max-width: 900px) {
+  .lp-top-cta { display: none; }
+  .lp-nav { position: static; padding: 0; margin: 0 6px 0 0; background: none; backdrop-filter: none; border: 0; justify-content: flex-start; gap: 0; }
+  .lp-nav a { padding: 8px 9px; font-size: .86rem; }
+  .lp-section { scroll-margin-top: var(--topbar-h); }
+  .lp-hero { padding-top: 76px; }
+}
