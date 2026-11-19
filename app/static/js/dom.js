@@ -21,7 +21,7 @@ export function icon(name, cls = "i") {
   return svg;
 }
 
-const LOGO_PARTS = [["", "frame"], ["hands", "hands"], ["dotl", "dot"]];
+const LOGO_PARTS = [["frame", "frame"], ["dotl", "dot"]];
 
 /** شعار بصيرة بطبقاته (للتحريك). */
 export function logoSvg(cls) {

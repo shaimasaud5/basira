@@ -79,8 +79,7 @@ svg.i { width: 1.25em; height: 1.25em; flex: none; vertical-align: -0.2em; }
 /* شعار متحرك بالخلفية: اليدين تتصافح والأسطر تنكتب */
 .bg-logo { position: absolute; inset-inline-end: -80px; top: 6%; width: 520px; height: auto; z-index: -1; color: var(--brand); opacity: .14; pointer-events: none; }
 .bg-logo use { transform-box: view-box; }
-.bg-logo .hands { transform-origin: 50% 58%; animation: shake 5s ease-in-out infinite; }
-.bg-logo .dotl { animation: dotbob 4s ease-in-out infinite; }
+.bg-logo .frame { animation: pump 5s ease-in-out infinite; }
 @media (max-width: 800px) { .bg-logo { width: 340px; inset-inline-end: -60px; top: 2%; } }
 .hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 56px 20px 24px; max-width: 920px; margin: 0 auto; }
 .eyebrow { display: inline-block; color: var(--brand); font-weight: 800; font-size: clamp(1.2rem, 3.2vw, 1.55rem); letter-spacing: .2px; animation: rise .6s ease both; }
@@ -283,9 +282,7 @@ details.ai-box .risk { border-style: dashed; }
 .chat-head .brand-name { font-size: 1.75rem; display: block; }
 .chat-logo { height: 46px; }
 .logo-anim use { transform-box: view-box; }
-.logo-anim .hands { transform-origin: 50% 58%; }
-.typing-logo .hands { animation: shake 1.6s ease-in-out infinite; }
-.typing-logo .dotl { animation: dotbob 1.2s ease-in-out infinite; }
+.typing-logo .frame { animation: pump 1.6s ease-in-out infinite; }
 .typing-logo { height: 34px; width: auto; aspect-ratio: 816 / 599; color: var(--brand); display: block; }
 .dot { animation: none; } .chat-head small .dot { animation: ping 2s ease-in-out infinite; }
 @keyframes ping { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--good) 50%, transparent); } 50% { box-shadow: 0 0 0 6px transparent; } }
@@ -1203,14 +1200,13 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 @media (max-width: 420px) { .lp-nav a { padding: 8px 6px; font-size: .82rem; } .topbar .inner { gap: 6px; } .lp-nav { margin-right: 0; } }
 @media (max-width: 350px) { .lp-nav a { padding: 8px 4px; font-size: .76rem; } .brand-name { font-size: 1.5rem; } }
 
-@keyframes dotbob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-34px); } }
 
-/* مصافحة: اليدين تنبض وتتصافح */
-@keyframes shake {
-  0%, 62%, 100% { transform: translateY(0) rotate(0deg); }
-  8% { transform: translateY(-16px) rotate(-3deg); } 16% { transform: translateY(10px) rotate(2.5deg); }
-  24% { transform: translateY(-14px) rotate(-2.5deg); } 32% { transform: translateY(8px) rotate(2deg); }
-  40% { transform: translateY(-9px) rotate(-1.5deg); } 48% { transform: translateY(4px) rotate(1deg); }
+/* مصافحة: الذراعين واليدين ترتفع وتنزل بنبضات قصيرة ثم تهدأ، والنقطة ثابتة */
+@keyframes pump {
+  0%, 58%, 100% { transform: translateY(0); }
+  9% { transform: translateY(-20px); } 18% { transform: translateY(8px); }
+  28% { transform: translateY(-17px); } 38% { transform: translateY(6px); }
+  48% { transform: translateY(-9px); } 54% { transform: translateY(0); }
 }
 /* لوقو الهيرو أكبر شوي */
 .lp-hero-text .bg-logo { width: 500px; }

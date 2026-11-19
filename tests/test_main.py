@@ -27,7 +27,7 @@ def test_landing_is_arabic_rtl_with_the_chosen_copy():
 def test_logo_svg_has_separate_animatable_layers():
     r = client.get("/static/logo.svg")
     assert r.status_code == 200 and r.headers["content-type"].startswith("image/svg+xml")
-    for layer in ("frame", "hands", "dot"):
+    for layer in ("frame", "dot"):
         assert f'id="{layer}"' in r.text
     assert "currentColor" in r.text  # يتبع الثيم (أسود بالفاتح وأبيض بالداكن)
 
