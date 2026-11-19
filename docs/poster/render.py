@@ -18,7 +18,7 @@ s = socket.socket(); s.bind(("", 0)); port = s.getsockname()[1]; s.close()
 srv = subprocess.Popen(["python3", "-m", "http.server", str(port)], cwd=tmp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 time.sleep(1)
 try:
-    subprocess.run([chrome, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--force-device-scale-factor=2",
+    subprocess.run([chrome, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--force-device-scale-factor=3",
                     "--window-size=2000,1045", "--virtual-time-budget=20000", "--force-prefers-reduced-motion",
                     f"--screenshot={here / 'basira-poster.png'}", f"http://localhost:{port}/poster.html"],
                    check=True, capture_output=True)
