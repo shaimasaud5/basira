@@ -17,6 +17,7 @@ class FakeResponse:
 
 @pytest.fixture(autouse=True)
 def env(monkeypatch):
+    llm._cooldown.clear()
     monkeypatch.setattr(llm, "load_dotenv", lambda: None)
     monkeypatch.setenv("GROQ_API_KEY", "gsk_fake")
     monkeypatch.setenv("GROQ_MODEL", "test-model")
@@ -148,3 +149,46 @@ def test_no_credit_402_gives_clear_arabic_error(monkeypatch):
     patch_post(monkeypatch, FakeResponse(402))
     with pytest.raises(llm.LLMError, match="رصيد"):
         llm.chat_json("s", "u")
+
+
+def two_keys(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY_2", "gsk_second")
+    monkeypatch.setenv("GROQ_API_KEY_3", "gsk_third")
+
+
+def test_rate_limited_first_key_falls_back_to_second(monkeypatch):
+    two_keys(monkeypatch)
+    calls = patch_post(monkeypatch, FakeResponse(status_code=429), FakeResponse())
+    assert llm.chat_json("s", "u") == {"ok": True}
+    assert [c["headers"]["Authorization"] for c in calls] == ["Bearer gsk_fake", "Bearer gsk_second"]
+
+
+def test_cooling_key_is_skipped_on_next_request(monkeypatch):
+    two_keys(monkeypatch)
+    patch_post(monkeypatch, FakeResponse(status_code=429), FakeResponse())
+    llm.chat_json("s", "u")
+    calls = patch_post(monkeypatch, FakeResponse())
+    llm.chat_json("s", "u")
+    assert calls[0]["headers"]["Authorization"] == "Bearer gsk_second"
+
+
+def test_rejected_key_falls_back_to_next(monkeypatch):
+    two_keys(monkeypatch)
+    calls = patch_post(monkeypatch, FakeResponse(status_code=401), FakeResponse())
+    assert llm.chat_json("s", "u") == {"ok": True}
+    assert calls[1]["headers"]["Authorization"] == "Bearer gsk_second"
+
+
+def test_all_keys_rate_limited_gives_arabic_busy_error(monkeypatch):
+    two_keys(monkeypatch)
+    patch_post(monkeypatch, FakeResponse(status_code=429), FakeResponse(status_code=429), FakeResponse(status_code=429))
+    with pytest.raises(llm.LLMError, match="مشغولة"):
+        llm.chat_json("s", "u")
+
+
+def test_secret_keys_never_logged(monkeypatch, caplog):
+    two_keys(monkeypatch)
+    patch_post(monkeypatch, FakeResponse(status_code=429), FakeResponse())
+    with caplog.at_level(logging.DEBUG):
+        llm.chat_json("s", "u")
+    assert "gsk_" not in caplog.text
