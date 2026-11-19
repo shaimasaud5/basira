@@ -1192,3 +1192,12 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 .lp-cta-row { margin-top: -10px; }
 .lp-cta-row .btn.lg { min-height: 46px; padding: 9px 28px; font-size: 1rem; }
 @media (max-width: 640px) { .lp-cta-row .btn.lg { min-height: 42px; min-width: 190px; padding: 8px 22px; font-size: .9rem; } }
+
+/* الجوال: «كيف تعمل» بسطر واحد للعنوان ولكل خطوة */
+@media (max-width: 640px) {
+  #how-title { font-size: clamp(1.1rem, 5.6vw, 1.5rem); white-space: nowrap; }
+  .lp-steps { gap: 4px; }
+  .lp-step { padding: 0 2px; }
+  .lp-step h3 { font-size: .74rem; white-space: nowrap; letter-spacing: 0; }
+}
+@media (max-width: 350px) { .lp-step h3 { font-size: .64rem; } }
