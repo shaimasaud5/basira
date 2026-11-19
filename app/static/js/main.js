@@ -40,12 +40,21 @@ function route() {
 /* ---------- الصفحة الرئيسية: تمرير ناعم للأقسام وظهور تدريجي هادي ---------- */
 function initLanding() {
   mountDemo($("lp-demo"));
-  // فقاعة «اسأل بصيرة»: تظهر مرة وحدة بعد ثانيتين وتختفي بعد خمس ثوانٍ
+  // فقاعة المساعد: تظهر كل شوي بجملة مختلفة وتختفي (ما تظهر والدرج مفتوح)
   const ask = $("lp-ask");
   ask.addEventListener("click", (ev) => { ev.preventDefault(); openAssistant(); });
   document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && !$("lp-drawer").classList.contains("hidden")) closeAssistant(); });
-  setTimeout(() => ask.classList.add("peek"), 2000);
-  setTimeout(() => ask.classList.remove("peek"), 7000);
+  const hints = ["عندك سؤال عن عقدك؟", "وش البنود الخطرة؟", "اسأل بصيرة"];
+  const bubble = ask.querySelector(".lp-ask-bubble");
+  let n = 0;
+  const peek = () => {
+    if (!$("lp-drawer").classList.contains("hidden")) return;
+    bubble.textContent = hints[n++ % hints.length];
+    ask.classList.add("peek");
+    setTimeout(() => ask.classList.remove("peek"), 4200);
+  };
+  setTimeout(peek, 2500);
+  setInterval(peek, 12000);
   document.querySelectorAll("[data-scroll]").forEach((link) => {
     link.addEventListener("click", (ev) => {
       const target = document.getElementById(link.dataset.scroll);
