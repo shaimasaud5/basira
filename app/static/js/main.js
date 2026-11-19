@@ -44,7 +44,7 @@ function initLanding() {
   const ask = $("lp-ask");
   ask.addEventListener("click", (ev) => { ev.preventDefault(); openAssistant(); });
   document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && !$("lp-drawer").classList.contains("hidden")) closeAssistant(); });
-  const hints = ["عندك سؤال عن عقدك؟", "وش البنود الخطرة؟", "اسأل بصيرة"];
+  const hints = ["عندك سؤال عن عقدك؟", "اسأل بصيرة"];
   const bubble = ask.querySelector(".lp-ask-bubble");
   let n = 0;
   const peek = () => {
