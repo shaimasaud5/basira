@@ -1097,3 +1097,4 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 }
 @media (max-width: 360px) { .lp-cta-row .btn.lg { font-size: .8rem; padding: 8px 6px; } }
 @media (max-width: 360px) { .lp-cta-row .btn.lg { white-space: normal; line-height: 1.3; text-align: center; } }
+@media (max-width: 960px) { .lp-hero { padding-top: 76px; } }
