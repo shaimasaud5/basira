@@ -16,13 +16,14 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
 .poster { position: relative; width: 2000px; height: 1045px; background: radial-gradient(900px 600px at 1450px 300px, var(--glow), transparent 70%), var(--mint); }
 
 /* ---- الجهة اليمنى: الهوية ---- */
-.logo { position:absolute; left: 1205px; top: 52px; width: 500px; height: auto; color: var(--teal); }
+.logo { position:absolute; left: 1170px; top: 70px; width: 580px; height: auto; color: var(--teal); }
 .logo-s { color: var(--brand); height: 34px; width: auto; }
-.word { position:absolute; right: 70px; left: 980px; top: 372px; text-align: center; font-family: "Lalezar", sans-serif; font-size: 280px; line-height: 1.05; color: var(--teal); letter-spacing: 0; }
-.tag { position:absolute; right: 178px; left: 940px; top: 662px; text-align:right; white-space: nowrap; font-weight: 800; font-size: 41px; color: var(--ink); line-height: 1.3; }
-.sub { position:absolute; right: 178px; left: 940px; top: 730px; text-align:right; white-space: nowrap; font-weight: 500; font-size: 28px; color: #5b6b68; line-height: 1.5; }
+.word { position:absolute; left: 900px; right: 20px; top: 424px; text-align: center; font-family: "Lalezar", sans-serif; font-size: 370px; line-height: 1.05; color: var(--teal); letter-spacing: 0; }
+.tag { position:absolute; left: 900px; right: 85px; top: 800px; text-align:right; white-space: nowrap; font-weight: 800; font-size: 36px; color: var(--ink); line-height: 1.3; }
+.sub { position:absolute; left: 900px; right: 85px; top: 854px; text-align:right; white-space: nowrap; font-weight: 500; font-size: 25px; color: #5b6b68; line-height: 1.5; }
 
 /* ---- الجوالات ---- */
+.phones { position:absolute; left: 70px; top: 165px; width: 830px; height: 820px; transform-origin: 0 0; transform: scale(.84); }
 .phone { position:absolute; width: 400px; height: 820px; border-radius: 62px; background: #d6dadf; padding: 14px; box-shadow: 0 30px 60px rgba(20,40,60,.18), 0 0 0 2px #c3c8ce inset; }
 .phone .scr { position:relative; width:100%; height:100%; border-radius: 50px; overflow:hidden; background: var(--bg); color: var(--ink-d); direction: rtl; }
 .island { position:absolute; top: 14px; left: 50%; transform: translateX(-50%); width: 120px; height: 34px; border-radius: 20px; background:#000; z-index: 5; }
@@ -68,7 +69,7 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
   <div class="sub">يكشف لك الالتزامات والمخاطر، لتتخذ قراراتك بثقة قبل توقيع العقد.</div>
 
   <!-- جوال 1: التقرير -->
-  <div class="phone" style="left: 90px; top: 110px;">
+  <div class="phones"><div class="phone" style="left: 0px; top: 0px;">
     <div class="scr">
       <div class="island"></div>
       <div class="status"><span>9:41</span><span>5G ▮▮▮</span></div>
@@ -95,7 +96,7 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
   </div>
 
   <!-- جوال 2: المحادثة -->
-  <div class="phone" style="left: 520px; top: 110px;">
+  <div class="phone" style="left: 430px; top: 0px;">
     <div class="scr">
       <div class="island"></div>
       <div class="status"><span>5:26</span><span>5G ▮▮▮</span></div>
@@ -113,6 +114,7 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
       </div>
       <div class="home"></div>
     </div>
+  </div>
   </div>
 
 </div></body></html>
