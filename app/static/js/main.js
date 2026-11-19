@@ -33,6 +33,7 @@ function route() {
   show($("view-landing"), !inApp);
   show($("view-home"), inApp);
   show($("nav-home"), inApp);
+  show($("nav-reset"), inApp);
   show($("lp-nav"), !inApp);
   show($("lp-top-cta"), !inApp);
   closeAssistant();
