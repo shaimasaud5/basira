@@ -1172,7 +1172,7 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 /* زر الرجوع: بأول الهيدر (يمين في العربي)، وسهم يشاور لليمين */
 .nav-back .i { transform: scaleX(-1); }
 .nav-back:hover .i { transform: scaleX(-1) translateX(-3px); }
-.nav-back { margin-inline-end: -4px; }
+.nav-back { margin-inline-start: -4px; }
 
 /* زر الهيرو: بالوسط وأصغر */
 .lp-cta-row { justify-content: center; }
