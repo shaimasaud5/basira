@@ -1113,12 +1113,12 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 @media (max-width: 960px) { .lp-hero-grid { row-gap: 50px; } }
 
 /* أيقونة «اسأل بصيرة» الثابتة في الصفحة الرئيسية */
-.lp-ask { position: fixed; left: 16px; bottom: 18px; z-index: 30; display: flex; align-items: center; gap: 10px; flex-direction: row; direction: ltr; text-decoration: none; }
+.lp-ask { position: fixed; left: 16px; bottom: 18px; z-index: 30; display: flex; align-items: flex-start; gap: 10px; flex-direction: column; direction: ltr; text-decoration: none; }
 .lp-ask-btn { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--brand); color: var(--on-brand); box-shadow: 0 8px 22px color-mix(in srgb, var(--brand) 35%, transparent); transition: transform .2s ease; }
 .lp-ask-btn svg { width: 24px; height: 24px; }
 .lp-ask:hover .lp-ask-btn { transform: translateY(-2px); }
-.lp-ask-bubble { order: 2; position: relative; direction: rtl; background: var(--brand-050); color: var(--brand-600); border: 1px solid color-mix(in srgb, var(--brand) 38%, transparent); border-radius: 18px; padding: 9px 16px; font-weight: 700; font-size: .92rem; white-space: nowrap; box-shadow: 0 8px 22px color-mix(in srgb, var(--brand) 18%, transparent); opacity: 0; transform: translateX(-10px) scale(.94); transform-origin: left center; pointer-events: none; transition: opacity .45s ease, transform .45s ease; }
-.lp-ask-bubble::before { content: ""; position: absolute; left: -6px; top: 50%; width: 10px; height: 10px; margin-top: -5px; background: var(--brand-050); border-left: 1px solid color-mix(in srgb, var(--brand) 38%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--brand) 38%, transparent); transform: rotate(45deg); }
+.lp-ask-bubble { order: 0; position: relative; direction: rtl; background: var(--brand-050); color: var(--brand-600); border: 1px solid color-mix(in srgb, var(--brand) 38%, transparent); border-radius: 18px; padding: 9px 16px; font-weight: 700; font-size: .92rem; white-space: nowrap; box-shadow: 0 8px 22px color-mix(in srgb, var(--brand) 18%, transparent); opacity: 0; transform: translateY(8px) scale(.94); transform-origin: left bottom; pointer-events: none; transition: opacity .45s ease, transform .45s ease; }
+.lp-ask-bubble::before { content: ""; position: absolute; left: 19px; bottom: -6px; width: 10px; height: 10px; background: var(--brand-050); border-right: 1px solid color-mix(in srgb, var(--brand) 38%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--brand) 38%, transparent); transform: rotate(45deg); }
 .lp-ask.peek .lp-ask-bubble, .lp-ask:hover .lp-ask-bubble, .lp-ask:focus-visible .lp-ask-bubble { opacity: 1; transform: none; }
 
 /* خلفية الصفحة الرئيسية بدون شبكة النقاط */
