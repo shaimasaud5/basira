@@ -47,14 +47,14 @@ BAD_KEY_COOLDOWN = 300.0
 
 def api_keys() -> list[str]:
     """كل المفاتيح بالترتيب: الأول هو الأساسي والباقي احتياطي (يُجرّب لو الأول انقفل أو بلغ حده).
-    LLM_API_KEY و LLM_API_KEY_2 و _3 ... (أو GROQ_API_KEY و GROQ_API_KEY_2 ... بالإعداد القديم)."""
+    الأسماء: LLM_API_KEY و LLM_API_KEY_2 و _3 ... ثم (للإعداد القديم) GROQ_API_KEY و GROQ_API_KEY_2 ... ."""
     load_dotenv()
-    prefix = "LLM_API_KEY" if os.environ.get("LLM_API_KEY", "").strip() else "GROQ_API_KEY"
     keys: list[str] = []
-    for name in (prefix, f"{prefix}_2", f"{prefix}_3", f"{prefix}_4"):
-        value = os.environ.get(name, "").strip()
-        if value and value != "your_key_here" and value not in keys:
-            keys.append(value)
+    for prefix in ("LLM_API_KEY", "GROQ_API_KEY"):
+        for name in (prefix, f"{prefix}_2", f"{prefix}_3", f"{prefix}_4"):
+            value = os.environ.get(name, "").strip()
+            if value and value != "your_key_here" and value not in keys:
+                keys.append(value)
     return keys
 
 

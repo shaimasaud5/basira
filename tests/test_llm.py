@@ -192,3 +192,10 @@ def test_secret_keys_never_logged(monkeypatch, caplog):
     with caplog.at_level(logging.DEBUG):
         llm.chat_json("s", "u")
     assert "gsk_" not in caplog.text
+
+
+def test_backup_keys_are_read_even_when_primary_uses_legacy_name(monkeypatch):
+    monkeypatch.delenv("LLM_API_KEY", raising=False)
+    monkeypatch.setenv("LLM_API_KEY_2", "gsk_second")
+    monkeypatch.setenv("LLM_API_KEY_3", "gsk_third")
+    assert llm.api_keys() == ["gsk_second", "gsk_third", "gsk_fake"]
