@@ -1119,3 +1119,6 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 .lp-ask:hover .lp-ask-btn { transform: translateY(-2px); }
 .lp-ask-bubble { order: 2; direction: rtl; background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); border-radius: 14px; border-end-start-radius: 4px; padding: 8px 14px; font-weight: 700; font-size: .9rem; white-space: nowrap; box-shadow: 0 8px 22px rgba(0,0,0,.18); opacity: 0; transform: translateX(-8px) scale(.96); pointer-events: none; transition: opacity .4s ease, transform .4s ease; }
 .lp-ask.peek .lp-ask-bubble, .lp-ask:hover .lp-ask-bubble, .lp-ask:focus-visible .lp-ask-bubble { opacity: 1; transform: none; }
+
+/* خلفية الصفحة الرئيسية بدون شبكة النقاط */
+.landing .bg::after { display: none; }
