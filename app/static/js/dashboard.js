@@ -210,7 +210,8 @@ function detailDialog(onAsk) {
     ico.append(icon(card.severity));
     const titles = el("div");
     const sev = el("span", "sev-chip");
-    sev.append(levelBars(card.severity), document.createTextNode(`خطورة ${SEV_LABEL[card.severity] || card.severity} · ${CATEGORY[card.category] || card.category}`));
+    sev.append(levelBars(card.severity), document.createTextNode(`خطورة ${SEV_LABEL[card.severity] || card.severity}`),
+      el("span", "dlg-cat", ` · ${CATEGORY[card.category] || card.category}`));
     titles.append(sev, el("h3", "", card.title));
     const close = el("button", "btn ghost icon-btn");
     close.type = "button";

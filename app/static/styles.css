@@ -1091,3 +1091,6 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 
 /* لوقو الخلفية يتوسّط العنوان والوصف فقط (بدون الأزرار) */
 .lp-hero-copy { position: relative; }
+
+/* مثال الصفحة الرئيسية: نافذة التفاصيل بدون «موثّق» وبدون اسم التصنيف */
+.lp-demo .risk-dialog .trust, .lp-demo .risk-dialog .dlg-cat { display: none; }
