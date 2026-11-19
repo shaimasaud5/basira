@@ -61,11 +61,11 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
 
 .cl { position:absolute; width: 520px; height: 440px; }
 .cl .fcard { position:absolute; }
-.cl .g { left: 232px; top: 0; width: 288px; z-index: 3; }
-.cl .s1 { left: 0; top: 0; width: 214px; z-index: 3; padding: 14px 18px; }
-.cl .s2 { left: 0; top: 148px; width: 214px; z-index: 3; padding: 14px 18px; }
+.cl .g { left: 232px; top: 0; width: 288px; height: 258px; z-index: 3; }
+.cl .s1 { left: 0; top: 0; width: 214px; height: 122px; display:flex; flex-direction:column; justify-content:center; z-index: 3; padding: 0 18px; }
+.cl .s2 { left: 0; top: 136px; width: 214px; height: 122px; display:flex; flex-direction:column; justify-content:center; z-index: 3; padding: 0 18px; }
 .cl .s1 .big, .cl .s2 .big { font-size: 36px; }
-.cl .r { left: 0; top: 308px; bottom: auto; width: 520px; z-index: 3; }
+.cl .r { left: 0; top: 272px; bottom: auto; width: 520px; z-index: 3; }
 .cl .r h5 { font-size: 20px; }
 .pw { position:absolute; transform-origin: 0 0; }
 .pw .phone { box-shadow: 0 30px 60px rgba(20,60,100,.22), 0 0 0 2px #c3c8ce inset; }
@@ -86,7 +86,7 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
   <div class="sub">يكشف لك الالتزامات والمخاطر، لتتخذ قراراتك بثقة قبل توقيع العقد.</div>
 
   <!-- جوال 1: التقرير -->
-  <div class="cl" style="left: 18px; top: 232px;">
+  <div class="cl" style="left: 18px; top: 262px;">
   <div class="fcard g"><h4>نسبة الإيجار من إيرادك</h4>
     <svg class="gauge" viewBox="0 0 250 135"><path d="M25 125 A100 100 0 0 1 90 31" fill="none" stroke="#dc9b97" stroke-width="22"/><path d="M99 28 A100 100 0 0 1 150 28" fill="none" stroke="#f0cd72" stroke-width="22"/><path d="M159 31 A100 100 0 0 1 225 125" fill="none" stroke="#86c987" stroke-width="22"/><circle cx="46" cy="92" r="11" fill="#c8453f" stroke="#ffffff" stroke-width="4"/></svg>
     <div class="pct">25<small>%</small></div><div class="sev">نسبة عالية</div>
