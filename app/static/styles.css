@@ -1131,3 +1131,20 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 @keyframes drawerIn { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
 @media (max-width: 640px) { .lp-drawer { left: 8px; right: 8px; bottom: 8px; width: auto; height: calc(100dvh - 80px); } }
 @media (prefers-reduced-motion: reduce) { .lp-drawer { animation: none; } }
+
+/* بطاقات المميزات أصغر */
+@media (min-width: 1001px) {
+  #features .lp-feat { padding: 20px 12px 18px; border-radius: 26px; }
+  #features .lp-feat .lp-ico { width: 50px; height: 50px; }
+  #features .lp-feat .lp-ico svg { width: 23px; height: 23px; }
+  #features .lp-feat h3 { margin: 12px 0 6px; font-size: .98rem; }
+  #features .lp-feat p { font-size: .8rem; line-height: 1.7; }
+}
+@media (max-width: 1000px) {
+  #features .lp-feats { gap: 10px; }
+  #features .lp-feat { padding: 14px 10px 12px; border-radius: 20px; }
+  #features .lp-feat .lp-ico { width: 40px; height: 40px; }
+  #features .lp-feat .lp-ico svg { width: 20px; height: 20px; }
+  #features .lp-feat h3 { margin: 9px 0 4px; font-size: .92rem; }
+  #features .lp-feat p { font-size: .76rem; line-height: 1.6; }
+}
