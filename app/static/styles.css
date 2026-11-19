@@ -1080,7 +1080,7 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
   #features .lp-feats:active { animation-play-state: paused; }
   #features .container, #features .lp-wrap { overflow: hidden; }
 }
-@keyframes featsMarquee { to { transform: translateX(-50%); } }
+@keyframes featsMarquee { to { transform: translateX(50%); } }
 @media (max-width: 1000px) and (prefers-reduced-motion: reduce) {
   #features .lp-feats { animation: none; width: auto; overflow-x: auto; }
   #features .lp-feat.lp-clone { display: none; }
