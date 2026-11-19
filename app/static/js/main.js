@@ -33,6 +33,15 @@ function initLanding() {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
+  // شريط المميزات المتحرك على الجوال: نسخة ثانية من البطاقات لتكرار سلس (تظهر بالـCSS على الشاشات الصغيرة فقط)
+  const feats = document.querySelector("#features .lp-feats");
+  if (feats) [...feats.children].forEach((li) => {
+    const c = li.cloneNode(true);
+    c.classList.remove("lp-reveal");
+    c.classList.add("lp-clone");
+    c.setAttribute("aria-hidden", "true");
+    feats.appendChild(c);
+  });
   if (!("IntersectionObserver" in window)) return;
   document.documentElement.classList.add("lp-js");
   const io = new IntersectionObserver((entries) => {
