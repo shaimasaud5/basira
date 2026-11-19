@@ -84,7 +84,7 @@ def test_landing_polish_v2():
 
 def test_home_interactivity_and_chat_composer():
     page = client.get("/").text
-    for marker in ('id="progress"', 'data-for="activity"', 'data-for="city"', 'id="ratio-live"', 'class="pill-input"', "chat-logo logo-anim"):
+    for marker in ('data-for="activity"', 'data-for="city"', 'id="ratio-live"', 'class="pill-input"', "chat-logo logo-anim"):
         assert marker in page
 
 

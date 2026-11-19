@@ -31,9 +31,11 @@ function updateProgress() {
   const dataOk = Boolean($("activity").value.trim() && $("city").value.trim());
   const contractOk = hasContract();
   const state = [dataOk ? "done" : "active", contractOk ? "done" : dataOk ? "active" : "", dataOk && contractOk ? "active" : ""];
-  document.querySelectorAll("#progress li").forEach((li, i) => { li.className = state[i]; });
-  $("progress").style.setProperty("--p", String((Number(dataOk) + Number(contractOk)) / 2));
   $("analyze").classList.toggle("ready", dataOk && contractOk);
+  const bar = $("progress");   // شريط الخطوات محذوف من الواجهة؛ نتحقق قبل التحديث
+  if (!bar) return;
+  bar.querySelectorAll("li").forEach((li, i) => { li.className = state[i]; });
+  bar.style.setProperty("--p", String((Number(dataOk) + Number(contractOk)) / 2));
 }
 
 export function initProgress() {
