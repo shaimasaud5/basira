@@ -1,6 +1,6 @@
 /* ============ بصيرة: نظام التصميم ============ */
 /* ===== لوحة الألوان: Sample 1 (الافتراضية) =====
-   هوية: أخضر مزرق (teal) #0e6b63 على أسطح محايدة دافئة. ألوان الحالة من دليل الرسوم: أحمر #d03b3b، كهرماني #fab219، أخضر #0ca30c.
+   هوية: أزرق سماوي (sky) #0284c7 على أسطح محايدة دافئة. ألوان الحالة من دليل الرسوم: أحمر #d03b3b، كهرماني #fab219، أخضر #0ca30c.
    عشان نضيف لوحات ثانية بدون ما نلمس هذي: نكتب كتلة [data-palette="sample-2"] تعيد تعريف نفس المتغيرات (--brand، --surface...)
    ونغيّر السمة data-palette على وسم html. */
 :root, :root[data-palette="sample-1"] {
@@ -9,7 +9,7 @@
   --bg: #f9f9f7; --surface: #fcfcfb; --surface-2: #f2f2ee; --ink: #0b0b0b; --ink-2: #52514e; --ink-3: #6f6d68;
   --line: #e1e0d9; --line-strong: #c3c2b7;
   /* هوية بصيرة */
-  --brand: #0e6b63; --brand-600: #0a554f; --brand-050: #e4f2f0; --on-brand: #ffffff;
+  --brand: #0284c7; --brand-600: #0369a1; --brand-050: #e0f2fe; --on-brand: #ffffff;
   /* ألوان الحالة (ثابتة، تُعرض دايماً مع أيقونة وكلمة) */
   --crit: #d03b3b; --warn: #fab219; --good: #0ca30c;
   --shadow: 0 1px 2px rgba(11,11,11,.05), 0 10px 30px rgba(11,11,11,.06);
@@ -20,7 +20,7 @@
   :root:not([data-theme="light"]) {
     --bg: #0d0d0d; --surface: #1a1a19; --surface-2: #222221; --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #9a9890;
     --line: #2c2c2a; --line-strong: #383835;
-    --brand: #3fc1b3; --brand-600: #5fd0c3; --brand-050: #12302d; --on-brand: #06201d;
+    --brand: #7dd3fc; --brand-600: #bae6fd; --brand-050: #0c2a3d; --on-brand: #06202f;
     --shadow: 0 1px 2px rgba(0,0,0,.5), 0 10px 30px rgba(0,0,0,.4);
   }
 }
@@ -28,7 +28,7 @@
 :root[data-theme="dark"] {
   --bg: #0d0d0d; --surface: #1a1a19; --surface-2: #222221; --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #9a9890;
   --line: #2c2c2a; --line-strong: #383835;
-  --brand: #3fc1b3; --brand-600: #5fd0c3; --brand-050: #12302d; --on-brand: #06201d;
+  --brand: #7dd3fc; --brand-600: #bae6fd; --brand-050: #0c2a3d; --on-brand: #06202f;
   --shadow: 0 1px 2px rgba(0,0,0,.5), 0 10px 30px rgba(0,0,0,.4);
 }
 * { box-sizing: border-box; }
