@@ -19,7 +19,7 @@ def test_landing_is_arabic_rtl_with_the_chosen_copy():
     page = client.get("/").text
     assert 'dir="rtl"' in page and "بصِيـــرة" in page
     assert "قبل ما توقّع عقد الإيجار" not in page   # الجملة التمهيدية انحذفت
-    assert "لا تلتزم بعقد قبل ما تعرف" in page and "وش يترتب عليه." in page
+    assert "لا تلتزم بعقد قبل ما تعرف" in page and "وش يترتب عليه</span>" in page
     assert "ابدأ تحليل عقدك" in page and "اكتشف كيف تعمل بصيرة" in page
     assert "قراءة أولية وليست استشارة قانونية" not in page
 
@@ -48,8 +48,8 @@ def test_landing_sections_ctas_and_footer():
     page = client.get("/").text
     for section in ("how", "features"):
         assert f'id="{section}"' in page
-    for copy in ("ثلاث خطوات تفصلك عن فهم عقدك.", "المميزات",
-                 "عقدك يستحق أن تفهمه قبل أن توقعه.", "حلّل عقدك الآن", "لا يتطلب إنشاء حساب.",
+    for copy in ("ثلاث خطوات تفصلك عن فهم عقدك", "المميزات",
+                 "عقدك يستحق أن تفهمه قبل أن توقعه", "حلّل عقدك الآن", "لا يتطلب إنشاء حساب.",
                  "تحليل العقد", "تقييم المخاطر", "التحليل المالي", "خصوصية مستنداتك", "التوصيات الذكية", "مساعد بصيرة"):
         assert copy in page
     assert 'class="btn primary lg cta" href="#/app"' in page          # الدعوة الأساسية تدخل التطبيق
