@@ -503,3 +503,11 @@ def export_rows() -> list[list]:
         out.append([datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m-%d %H:%M:%S"), day, names.get((day, vid), ""), vid, kind,
                     f"{method} {path}".strip(), status if status is not None else "", ms if ms is not None else "", text])
     return out
+
+
+def wipe() -> int:
+    """يمسح كل أحداث المراقبة (تصفير اللوحة). يرجّع عدد ما انمسح."""
+    with _lock:
+        n = (_run("SELECT COUNT(*) FROM events", (), fetch=True) or [[0]])[0][0]
+        _run("DELETE FROM events")
+    return int(n)

@@ -133,6 +133,11 @@ def admin_person(name: str):
     return telemetry.person_journey(name[:130])
 
 
+@app.post("/admin/api/reset", include_in_schema=False, dependencies=[Depends(require_admin)])
+def admin_reset():
+    return {"deleted": telemetry.wipe()}
+
+
 @app.get("/admin/api/export.csv", include_in_schema=False, dependencies=[Depends(require_admin)])
 def admin_export():
     import csv, io

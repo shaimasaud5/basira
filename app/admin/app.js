@@ -118,6 +118,12 @@ async function load() {
   $("range").append(b);
 });
 const refresh = el("button", "", "تحديث"); refresh.type = "button"; refresh.addEventListener("click", load); $("range").append(refresh);
+$("reset").addEventListener("click", async () => {
+  if (!confirm("تصفير اللوحة يمسح كل الزوار والأحداث نهائيًا ولا يمكن التراجع. نزّلتِ نسخة CSV؟ تكملين؟")) return;
+  if (prompt("للتأكيد اكتبي: تصفير") !== "تصفير") return;
+  const r = await fetch("/admin/api/reset", { method: "POST", credentials: "same-origin" });
+  if (r.ok) { $("journey-box").hidden = true; load(); }
+});
 hello();
 load();
 setInterval(load, 30000);

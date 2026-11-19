@@ -120,3 +120,11 @@ def test_notes_never_hold_contract_text_or_ip():
     from app import telemetry
     dump = str(telemetry._rows("SELECT meta, path, visitor FROM events"))
     assert secret not in dump and "testclient" not in dump and "127.0.0.1" not in dump
+
+
+def test_admin_reset_wipes_everything(monkeypatch):
+    monkeypatch.setenv("ADMIN_PASSWORD", "s3cret")
+    client.get("/", headers={"user-agent": UA_PHONE})
+    assert client.post("/admin/api/reset").status_code in (401, 404)
+    assert client.post("/admin/api/reset", auth=("x", "s3cret")).json()["deleted"] >= 1
+    assert client.get("/admin/api/summary", auth=("x", "s3cret")).json()["visitors_total"] == 0
