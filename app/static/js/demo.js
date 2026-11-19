@@ -23,8 +23,8 @@ const DEMO_REPORT = {
   ai_suggestions: [],
   warnings: [],
   metrics: {
-    monthly_rent: 15000, monthly_revenue: 60000, lease_months: 24, rent_to_revenue_pct: 25,
-    ratio_thresholds: { medium: 10, high: 15 }, total_commitment: 360000,
+    monthly_rent: 15000, monthly_revenue: 60000, lease_months: 12, rent_to_revenue_pct: 25,
+    ratio_thresholds: { medium: 10, high: 15 }, total_commitment: 180000,
     increase_pct: 7.5, rent_after_increase: 16125, monthly_extra_after_increase: 1125, yearly_extra_after_increase: 13500,
   },
 };

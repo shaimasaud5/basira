@@ -59,6 +59,13 @@ def index():
     return FileResponse(BASE_DIR / "static" / "index.html", headers={"Cache-Control": "no-cache"})
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    # Safari وبعض المتصفحات تطلب /favicon.ico مباشرة ولا تعتمد على SVG
+    return FileResponse(BASE_DIR / "static" / "icons" / "favicon-32.png", media_type="image/png",
+                        headers={"Cache-Control": "no-cache"})
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}

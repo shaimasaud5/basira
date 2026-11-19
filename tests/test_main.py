@@ -36,7 +36,9 @@ def test_landing_background_uses_the_animated_logo_not_the_eye():
     page = client.get("/").text
     assert 'class="bg-logo"' in page and 'class="dotl"' in page and "logo.svg#dot" in page
     assert "i-lens" not in page and 'class="lens"' not in page
-    assert 'rel="icon"' in page and "/static/logo.svg" in page
+    assert 'rel="icon"' in page and "/static/logo.svg" in page and "apple-touch-icon" in page
+    assert client.get("/favicon.ico").headers["content-type"] == "image/png"
+    assert client.get("/static/icons/apple-touch-icon.png").status_code == 200
 
 
 def test_hero_starts_directly_with_the_headline():

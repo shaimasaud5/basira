@@ -49,12 +49,4 @@ html { zoom: 1.12; }
 <script type="module">
 import { mountDemo } from "/static/js/demo.js";
 mountDemo(document.getElementById("lp-demo"));
-// للبوستر فقط: مدة العقد 12 شهر (الإجمالي = 15,000 × 12 = 180,000)
-const patch = () => {
-  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-  for (let n = w.nextNode(); n; n = w.nextNode()) {
-    n.nodeValue = n.nodeValue.replace("24 شهر", "12 شهر").replace("360,000", "180,000");
-  }
-};
-[300, 900, 2000, 4000].forEach((t) => setTimeout(patch, t));
 </script></body></html>
