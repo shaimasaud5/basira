@@ -19,8 +19,8 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
 .logo { position:absolute; left: 1170px; top: 70px; width: 580px; height: auto; color: var(--teal); }
 .logo-s { color: var(--brand); height: 34px; width: auto; }
 .word { position:absolute; left: 900px; right: 20px; top: 424px; text-align: center; font-family: "Lalezar", sans-serif; font-size: 370px; line-height: 1.05; color: var(--teal); letter-spacing: 0; }
-.tag { position:absolute; left: 900px; right: 85px; top: 800px; text-align:right; white-space: nowrap; font-weight: 800; font-size: 36px; color: var(--ink); line-height: 1.3; }
-.sub { position:absolute; left: 900px; right: 85px; top: 854px; text-align:right; white-space: nowrap; font-weight: 500; font-size: 25px; color: #5b6b68; line-height: 1.5; }
+.tag { position:absolute; left: 1158px; right: 85px; top: 800px; text-align:center; white-space: nowrap; font-weight: 800; font-size: 38px; color: var(--ink); line-height: 1.3; }
+.sub { position:absolute; left: 1158px; right: 85px; top: 858px; text-align:center; white-space: nowrap; font-weight: 500; font-size: 26px; color: #5b6b68; line-height: 1.5; }
 
 /* ---- الجوالات ---- */
 .phones { position:absolute; left: 70px; top: 165px; width: 830px; height: 820px; transform-origin: 0 0; transform: scale(.84); }
