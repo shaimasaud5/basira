@@ -1,13 +1,18 @@
 """سيرفر FastAPI: يربط التحقق والحسابات والتقرير."""
 import logging
+import os
+import secrets
+import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, File, Request, UploadFile
+from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
 
+from app import telemetry
 from app.ai_risks import accept_suggestions, request_suggestions
 from app.chat import ChatInput, answer
 from app.contract import extract_contract, looks_like_injection
@@ -49,6 +54,65 @@ class RevalidatingStaticFiles(StaticFiles):
         response = await super().get_response(path, scope)
         response.headers["Cache-Control"] = "no-cache"
         return response
+
+
+SKIP_TRACKING = ("/static", "/admin", "/health", "/favicon.ico")
+
+
+@app.middleware("http")
+async def track_usage(request: Request, call_next):
+    """أرقام فقط: المسار والحالة والزمن ومعرّف مجهول يومي. لا IP ولا محتوى."""
+    path = request.url.path
+    if path.startswith(SKIP_TRACKING):
+        return await call_next(request)
+    started = time.perf_counter()
+    response = await call_next(request)
+    ms = int((time.perf_counter() - started) * 1000)
+    ua = request.headers.get("user-agent", "")
+    vid = telemetry.visitor_id(request.client.host if request.client else "", ua)
+    meta: dict = {}
+    if request.method == "GET" and path == "/":
+        meta = {**telemetry.describe_client(ua), "country": request.headers.get("cf-ipcountry", ""),
+                "source": telemetry.source_of(request.headers.get("referer", ""), request.query_params.get("utm_source", ""))}
+    telemetry.record("req", vid, request.method, path, response.status_code, ms, meta)
+    return response
+
+
+# ---- لوحة المراقبة (محمية بكلمة سر ADMIN_PASSWORD؛ بدونها تكون معطّلة) ----
+_basic = HTTPBasic(auto_error=False)
+
+
+def require_admin(credentials: HTTPBasicCredentials | None = Depends(_basic)) -> None:
+    password = os.environ.get("ADMIN_PASSWORD", "")
+    if not password:
+        raise HTTPException(status_code=404)
+    if credentials is None or not secrets.compare_digest(credentials.password.encode(), password.encode()):
+        raise HTTPException(status_code=401, headers={"WWW-Authenticate": 'Basic realm="admin"'})
+
+
+@app.get("/admin", include_in_schema=False, dependencies=[Depends(require_admin)])
+def admin_page():
+    return FileResponse(BASE_DIR / "admin" / "admin.html", headers={"Cache-Control": "no-store"})
+
+
+@app.get("/admin/app.js", include_in_schema=False, dependencies=[Depends(require_admin)])
+def admin_js():
+    return FileResponse(BASE_DIR / "admin" / "app.js", media_type="text/javascript", headers={"Cache-Control": "no-store"})
+
+
+@app.get("/admin/api/summary", include_in_schema=False, dependencies=[Depends(require_admin)])
+def admin_summary(days: int = 7):
+    return telemetry.summary(max(1, min(days, 90)))
+
+
+@app.get("/admin/api/visitors", include_in_schema=False, dependencies=[Depends(require_admin)])
+def admin_visitors(limit: int = 60):
+    return telemetry.visitors(max(1, min(limit, 200)))
+
+
+@app.get("/admin/api/visitor/{vid}", include_in_schema=False, dependencies=[Depends(require_admin)])
+def admin_visitor(vid: str):
+    return telemetry.journey(vid[:32])
 
 
 app.mount("/static", RevalidatingStaticFiles(directory=BASE_DIR / "static"), name="static")

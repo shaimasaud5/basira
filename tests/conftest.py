@@ -1,6 +1,6 @@
 import pytest
 
-from app import llm, ratelimit
+from app import llm, ratelimit, telemetry
 
 
 @pytest.fixture(autouse=True)
@@ -20,3 +20,11 @@ def fresh_rate_limits():
     ratelimit.analyze_limiter.reset()
     ratelimit.chat_limiter.reset()
     ratelimit.extract_limiter.reset()
+
+
+@pytest.fixture(autouse=True)
+def isolated_telemetry(tmp_path):
+    """قاعدة المراقبة مؤقتة لكل اختبار (ما نلوّث data/telemetry.db)."""
+    telemetry.reset(str(tmp_path / "telemetry.db"))
+    yield
+    telemetry.reset()

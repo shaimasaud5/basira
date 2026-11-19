@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>لوحة المراقبة | بصِيـــرة</title>
+<link rel="icon" type="image/png" href="/static/icons/favicon-32.png">
+<link rel="stylesheet" href="/static/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Lalezar&display=swap" rel="stylesheet">
+<style>
+body { padding: 20px 16px 60px; }
+.ad { max-width: 1100px; margin: 0 auto; }
+.ad h1 { font-size: 1.6rem; margin: 0 0 4px; } .ad .sub { color: var(--ink-2); margin: 0 0 18px; }
+.ad-bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom: 18px; }
+.ad-bar button { border:1px solid var(--line-strong); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 6px 14px; font: inherit; font-weight:700; cursor:pointer; }
+.ad-bar button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+.kpis { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.kpi { background: var(--surface); border:1px solid var(--line); border-radius: 18px; padding: 14px 16px; }
+.kpi .v { font-size: 1.7rem; font-weight: 800; line-height: 1.2; } .kpi .l { color: var(--ink-2); font-size:.88rem; }
+.kpi.bad .v { color: #c0524a; }
+.box { background: var(--surface); border:1px solid var(--line); border-radius: 18px; padding: 16px; margin-bottom: 18px; }
+.box h2 { font-size: 1.05rem; margin: 0 0 10px; }
+.bars { display:flex; align-items:flex-end; gap:3px; height: 90px; }
+.bars i { flex:1; background: var(--brand); border-radius: 3px 3px 0 0; min-height: 2px; opacity:.85; }
+.grid2 { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.row { display:flex; justify-content:space-between; gap: 10px; padding: 5px 0; border-bottom: 1px dashed var(--line); } .row:last-child { border:0; }
+table { width:100%; border-collapse: collapse; font-size:.9rem; } th, td { text-align:start; padding: 8px 6px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+tr.v { cursor:pointer; } tr.v:hover { background: var(--brand-050); }
+.scroll { overflow-x:auto; }
+.steps { list-style:none; margin:0; padding:0; } .steps li { display:flex; gap:12px; padding:6px 0; border-bottom:1px dashed var(--line); }
+.steps time { color: var(--ink-3); min-width: 64px; } .bad-t { color:#c0524a; font-weight:700; }
+.note { color: var(--ink-3); font-size:.85rem; }
+</style>
+</head>
+<body>
+<div class="ad">
+  <h1>لوحة المراقبة</h1>
+  <p class="sub">أرقام الاستخدام والأداء. لا تُخزَّن نصوص العقود ولا رسائل المحادثة ولا عناوين IP. الزائر يظهر بمعرّف مجهول يتغيّر كل يوم.</p>
+  <div class="ad-bar" id="range"></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="box"><h2>الطلبات آخر 24 ساعة</h2><div class="bars" id="hourly"></div></div>
+  <div class="grid2" id="tops"></div>
+  <div class="box"><h2>الزوار</h2><div class="scroll"><table id="visitors"></table></div><p class="note">اضغط على أي زائر لترى خطواته داخل المنصة بالترتيب.</p></div>
+  <div class="box" id="journey-box" hidden><h2 id="journey-title"></h2><ul class="steps" id="journey"></ul></div>
+  <div class="box"><h2>آخر الأخطاء</h2><div id="errors"></div></div>
+</div>
+<script type="module" src="/admin/app.js"></script>
+</body>
+</html>

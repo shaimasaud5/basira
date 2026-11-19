@@ -15,6 +15,11 @@ from dotenv import load_dotenv
 
 logger = logging.getLogger("app.llm")
 
+try:
+    from app import telemetry
+except Exception:  # noqa: BLE001  المراقبة اختيارية
+    telemetry = None
+
 OPENROUTER_BASE = "https://openrouter.ai/api/v1"
 GROQ_BASE = "https://api.groq.com/openai/v1"
 DEFAULT_MODEL = "meta-llama/llama-3.3-70b-instruct:nitro"   # Llama هو الموديل الرئيسي؛ :nitro يوجّه للمزوّد الأسرع (تحليل 3 ثواني بدل 27)
@@ -160,18 +165,28 @@ def chat_json(system: str, user: str, temperature: float = 0) -> dict:
         raise BusyError("الخدمة مشغولة حالياً (تجاوزنا حد الطلبات). انتظر دقيقة وجرّب مرة ثانية.")
     last: LLMError | None = None
     for position, key in enumerate(candidates):
+        started = time.perf_counter()
         try:
-            return _chat_json_with(key, base, model, system, user, temperature)
+            data = _chat_json_with(key, base, model, system, user, temperature)
+            _track(200, started, keys.index(key) + 1)
+            return data
         except BusyError as e:
+            _track(429, started, keys.index(key) + 1)
             _cool(key, e.retry_after)
             last = e
             logger.warning("llm: key #%d rate-limited, trying next (%d left)", keys.index(key) + 1, len(candidates) - position - 1)
         except KeyProblem as e:
+            _track(401, started, keys.index(key) + 1)
             _cool(key, BAD_KEY_COOLDOWN)
             last = e
             logger.warning("llm: key #%d rejected, trying next (%d left)", keys.index(key) + 1, len(candidates) - position - 1)
     assert last is not None
     raise last
+
+
+def _track(status: int, started: float, key_number: int) -> None:
+    if telemetry:
+        telemetry.record("llm", "-", status=status, ms=int((time.perf_counter() - started) * 1000), meta={"key": key_number})
 
 
 def _chat_json_with(key: str, base: str, model: str, system: str, user: str, temperature: float) -> dict:
