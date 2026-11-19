@@ -27,6 +27,8 @@ def _number(value, label: str, integer: bool = False):
 
 
 class ProjectInput(BaseModel):
+    first_name: str | None = None
+    last_name: str | None = None
     activity: str = Field(default="", validate_default=True)
     city: str = Field(default="", validate_default=True)
     monthly_rent: float | None = None
@@ -34,6 +36,14 @@ class ProjectInput(BaseModel):
     lease_months: int | None = None
     contract_text: str | None = None
     consent: bool = False
+
+    @field_validator("first_name", "last_name", mode="before")
+    @classmethod
+    def _names(cls, v):
+        v = _blank_to_none(v)
+        if v is not None and (not isinstance(v, str) or len(v) > 60):
+            raise ValueError("الاسم طويل (الحد 60 حرف).")
+        return v
 
     @field_validator("activity", mode="before")
     @classmethod

@@ -62,3 +62,22 @@ def test_journey_lists_steps_in_order(monkeypatch):
     vid = client.get("/admin/api/visitors", auth=("x", "s3cret")).json()[0]["id"]
     steps = client.get(f"/admin/api/visitor/{vid}", auth=("x", "s3cret")).json()
     assert [s["label"] for s in steps] == ["فتح الصفحة", "رسالة للمساعد"]
+
+
+def test_name_is_linked_to_the_visitor_in_the_admin_only(monkeypatch, caplog):
+    import logging
+    monkeypatch.setenv("ADMIN_PASSWORD", "s3cret")
+    with caplog.at_level(logging.DEBUG):
+        client.post("/analyze", json={"first_name": "سارة", "last_name": "العتيبي", "activity": "كوفي", "city": "جدة"},
+                    headers={"user-agent": UA_PHONE})
+    assert "سارة" not in caplog.text and "العتيبي" not in caplog.text      # ما ينكتب بالسجلات
+    row = client.get("/admin/api/visitors", auth=("x", "s3cret")).json()[0]
+    assert row["name"] == "سارة العتيبي"
+    steps = client.get(f"/admin/api/visitor/{row['id']}", auth=("x", "s3cret")).json()
+    assert any(s["label"] == "عرّف بنفسه: سارة العتيبي" for s in steps)
+    assert client.get("/admin/api/summary", auth=("x", "s3cret")).json()["identified"] == 1
+
+
+def test_overlong_name_is_rejected_with_arabic_error():
+    r = client.post("/analyze", json={"first_name": "ا" * 61, "activity": "كوفي", "city": "جدة"})
+    assert r.status_code == 422 and any("الاسم" in m for m in r.json()["errors"])

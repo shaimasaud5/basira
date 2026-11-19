@@ -267,3 +267,10 @@ def test_analyze_runs_both_model_calls_in_parallel(monkeypatch):
 def test_demo_uses_the_real_dashboard_renderer():
     js = client.get("/static/js/demo.js").text
     assert 'import { renderDashboard } from "./dashboard.js"' in js and "renderDashboard(root, DEMO_REPORT" in js
+
+
+def test_name_fields_exist_and_are_required_by_the_form_script():
+    page = client.get("/").text
+    assert 'id="first_name"' in page and 'id="last_name"' in page and "للتواصل معك فقط" in page
+    js = client.get("/static/js/input.js").text
+    assert "الاسم الأول مطلوب." in js and "الاسم الأخير مطلوب." in js

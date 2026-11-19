@@ -171,8 +171,13 @@ def chat(payload: ChatInput, _: None = Depends(limit_chat)):
 
 
 @app.post("/analyze", dependencies=[Depends(limit_analyze)])
-def analyze(project: ProjectInput):
+def analyze(project: ProjectInput, request: Request):
     # الخصوصية: نسجّل الحالة والطول فقط، ولا نسجّل نص العقد أبداً
+    if project.first_name or project.last_name:
+        # الاسم يروح للوحة المراقبة فقط (مو للسجلات)، ومربوط بمعرّف الزائر المجهول
+        ua = request.headers.get("user-agent", "")
+        vid = telemetry.visitor_id(request.client.host if request.client else "", ua)
+        telemetry.record("identity", vid, meta={"first": project.first_name or "", "last": project.last_name or ""})
     logger.info("analyze: contract_len=%d", len(project.contract_text or ""))
 
     facts = None

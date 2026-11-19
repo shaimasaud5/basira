@@ -4,7 +4,7 @@ import * as api from "./api.js";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 const REDACTION_LABELS = { mobile: "جوال", iban: "آيبان", national_id: "هوية أو إقامة", email: "إيميل" };
-const FIELDS = ["activity", "city", "monthly_rent", "monthly_revenue", "lease_months"];
+const FIELDS = ["first_name", "last_name", "activity", "city", "monthly_rent", "monthly_revenue", "lease_months"];
 
 const input = { fileName: "", previewText: "" };   // الحالة بالذاكرة فقط
 const notify = () => document.dispatchEvent(new Event("bassira:input"));
@@ -168,6 +168,8 @@ export async function initInput({ onSubmit }) {
     showErrors([]);
     const body = payload();
     const missing = [];
+    if (!body.first_name) missing.push("الاسم الأول مطلوب.");
+    if (!body.last_name) missing.push("الاسم الأخير مطلوب.");
     if (!body.activity) missing.push("نوع النشاط مطلوب.");
     if (!body.city) missing.push("المدينة مطلوبة.");
     if (!body.contract_text) missing.push("ارفع عقد الإيجار أول، هو أساس التحليل.");

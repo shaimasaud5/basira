@@ -12,7 +12,7 @@ function kpi(value, label, bad = false) { const k = el("div", "kpi" + (bad ? " b
 function renderSummary(s) {
   const rate = s.analyses ? Math.round((s.analyses_failed / s.analyses) * 100) : 0;
   $("kpis").replaceChildren(
-    kpi(s.visitors_total, "زائر (مجهول)"), kpi(s.page_views, "فتح الصفحة"), kpi(s.uploads, "عقد مرفوع"),
+    kpi(s.visitors_total, "زائر"), kpi(s.identified, "عرّفوا بأسمائهم"), kpi(s.page_views, "فتح الصفحة"), kpi(s.uploads, "عقد مرفوع"),
     kpi(s.analyses_ok, "تحليل ناجح"), kpi(s.analyses_failed, `تحليل فاشل (${rate}%)`, s.analyses_failed > 0),
     kpi(sec(s.analysis_ms.p50), "زمن التحليل (متوسط)"), kpi(sec(s.analysis_ms.p95), "زمن التحليل (الأبطأ 5%)"),
     kpi(s.chats, "رسالة للمساعد"), kpi(s.llm_rate_limited, "مرّات رفض Groq (زحمة)", s.llm_rate_limited > 0), kpi(s.errors, "أخطاء", s.errors > 0));
@@ -28,11 +28,11 @@ function renderSummary(s) {
 
 function renderVisitors(list) {
   const t = $("visitors"); t.replaceChildren();
-  const head = el("tr"); ["الزائر", "اليوم", "آخر نشاط", "المصدر", "الجهاز", "الدولة", "فتح", "رفع", "تحليل", "محادثة", "أخطاء"].forEach((h) => head.append(el("th", "", h)));
+  const head = el("tr"); ["الاسم", "الزائر", "اليوم", "آخر نشاط", "المصدر", "الجهاز", "الدولة", "فتح", "رفع", "تحليل", "محادثة", "أخطاء"].forEach((h) => head.append(el("th", "", h)));
   t.append(head);
   list.forEach((v) => {
     const r = el("tr", "v");
-    [v.id, v.day, fmtDate(v.last), v.source || "—", v.device || "—", v.country || "—", v.views, v.uploads, v.analyses, v.chats, v.errors].forEach((x) => r.append(el("td", "", String(x))));
+    [v.name || "—", v.id, v.day, fmtDate(v.last), v.source || "—", v.device || "—", v.country || "—", v.views, v.uploads, v.analyses, v.chats, v.errors].forEach((x) => r.append(el("td", "", String(x))));
     r.addEventListener("click", () => showJourney(v));
     t.append(r);
   });

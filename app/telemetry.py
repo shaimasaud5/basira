@@ -166,6 +166,7 @@ def summary(days: int = 7) -> dict:
     return {
         "days": days,
         "visitors_total": len({e[2] for e in req}),
+        "identified": len({(e[1], e[2]) for e in ev if e[3] == "identity"}),
         "visitors_by_day": {d: len(v) for d, v in sorted(visitors_by_day.items())},
         "page_views": len(views),
         "uploads": len(previews),
@@ -181,11 +182,14 @@ def summary(days: int = 7) -> dict:
 
 
 def visitors(limit: int = 60) -> list[dict]:
+    names = {(d, vid): json.loads(meta or "{}") for d, vid, meta in
+             _rows("SELECT day, visitor, meta FROM events WHERE kind = 'identity' ORDER BY ts")}
     rows = _rows("SELECT ts, day, visitor, kind, method, path, status, ms, meta FROM events WHERE kind = 'req' ORDER BY ts DESC LIMIT 4000")
     out: dict[tuple, dict] = {}
     for ts, day, vid, _k, method, path, status, ms, meta in rows:
         v = out.setdefault((day, vid), {"id": vid, "day": day, "first": ts, "last": ts, "views": 0, "uploads": 0, "analyses": 0,
-                                         "chats": 0, "errors": 0, "country": "", "device": "", "source": ""})
+                                         "chats": 0, "errors": 0, "country": "", "device": "", "source": "",
+                                         "name": " ".join(filter(None, [names.get((day, vid), {}).get("first"), names.get((day, vid), {}).get("last")]))})
         v["first"], v["last"] = min(v["first"], ts), max(v["last"], ts)
         if (status or 0) >= 400:
             v["errors"] += 1
@@ -207,7 +211,11 @@ def journey(vid: str) -> list[dict]:
     rows = _rows("SELECT ts, kind, method, path, status, ms, meta FROM events WHERE visitor = ? ORDER BY ts", (vid,))
     steps = []
     for ts, kind, method, path, status, ms, meta in rows:
-        label = LABELS.get((method, path)) if kind == "req" else ("اتصال بالموديل" if kind == "llm" else kind)
+        if kind == "identity":
+            m = json.loads(meta or "{}")
+            label = "عرّف بنفسه: " + " ".join(filter(None, [m.get("first"), m.get("last")]))
+        else:
+            label = LABELS.get((method, path)) if kind == "req" else ("اتصال بالموديل" if kind == "llm" else kind)
         if not label:
             continue
         steps.append({"time": ts, "label": label, "status": status, "ms": ms, "meta": json.loads(meta or "{}")})
