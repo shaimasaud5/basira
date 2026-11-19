@@ -23,7 +23,12 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
 .sub { position:absolute; left: 1158px; right: 85px; top: 858px; text-align:center; white-space: nowrap; font-weight: 500; font-size: 26px; color: #5b6b68; line-height: 1.5; }
 
 /* ---- الجوالات ---- */
-.phones { position:absolute; left: 70px; top: 165px; width: 830px; height: 820px; transform-origin: 0 0; transform: scale(.84); }
+.phones { position:absolute; left: 30px; top: 112px; width: 860px; height: 820px; transform-origin: 0 0; transform: scale(1); }
+.fcard { position:absolute; background: #fff; border: 1px solid #dadde2; border-radius: 24px; padding: 18px 20px; box-shadow: 0 24px 48px rgba(20,60,100,.20); color: var(--ink-d); direction: rtl; }
+.fcard h4 { font-size: 16px; font-weight: 700; color: var(--ink2); text-align:center; margin-bottom: 4px; }
+.fcard .big { font-size: 46px; }
+.fcard.risk h5 { font-size: 22px; }
+.fcard.risk p { font-size: 15px; }
 .phone { position:absolute; width: 400px; height: 820px; border-radius: 62px; background: #d6dadf; padding: 14px; box-shadow: 0 30px 60px rgba(20,40,60,.18), 0 0 0 2px #c3c8ce inset; }
 .phone .scr { position:relative; width:100%; height:100%; border-radius: 50px; overflow:hidden; background: var(--bg); color: var(--ink-d); direction: rtl; }
 .island { position:absolute; top: 14px; left: 50%; transform: translateX(-50%); width: 120px; height: 34px; border-radius: 20px; background:#000; z-index: 5; }
@@ -69,34 +74,8 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
   <div class="sub">يكشف لك الالتزامات والمخاطر، لتتخذ قراراتك بثقة قبل توقيع العقد.</div>
 
   <!-- جوال 1: التقرير -->
-  <div class="phones"><div class="phone" style="left: 0px; top: 0px;">
-    <div class="scr">
-      <div class="island"></div>
-      <div class="status"><span>9:41</span><span>5G ▮▮▮</span></div>
-      <div class="bar">__LOGO_S__<span class="nm">بصِيـــرة</span></div>
-      <div class="body">
-        <div class="card">
-          <h4>نسبة الإيجار من إيرادك</h4>
-          <svg class="gauge" viewBox="0 0 250 135">
-            <path d="M25 125 A100 100 0 0 1 90 31" fill="none" stroke="#dc9b97" stroke-width="22"/>
-            <path d="M99 28 A100 100 0 0 1 150 28" fill="none" stroke="#f0cd72" stroke-width="22"/>
-            <path d="M159 31 A100 100 0 0 1 225 125" fill="none" stroke="#86c987" stroke-width="22"/>
-            <circle cx="46" cy="92" r="11" fill="#c8453f" stroke="#ffffff" stroke-width="4"/>
-          </svg>
-          <div class="pct">25<small>%</small></div>
-          <div class="sev">نسبة عالية</div>
-          <div class="sub2"><b>15,000 ريال</b> إيجار شهري من <b>60,000 ريال</b> إيراد شهري</div>
-        </div>
-        <div class="card"><div class="lbl">إجمالي التزام الإيجار</div><div class="big">360,000<small>ريال</small></div><div class="note">على مدى 24 شهر</div></div>
-        <div class="card"><div class="lbl">الإيجار بعد الزيادة</div><div class="big">16,125<small>ريال/شهر</small></div><div class="note">+1,125 شهريًا (7.5%)</div></div>
-        <div class="card risk"><span class="chip">▮▮▯ خطورة عالية</span><h5>الإيجار يأخذ جزء كبير من الإيراد</h5><p>الإيجار ثابت يُدفع كل شهر سواء بعت أو لا.</p></div>
-      </div>
-      <div class="home"></div>
-    </div>
-  </div>
-
-  <!-- جوال 2: المحادثة -->
-  <div class="phone" style="left: 430px; top: 0px;">
+  <div class="phones stage">
+  <div class="phone" style="left: 150px; top: 0px;">
     <div class="scr">
       <div class="island"></div>
       <div class="status"><span>5:26</span><span>5G ▮▮▮</span></div>
@@ -106,13 +85,30 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
           <div class="m bot">هلا! أنا بصِيـــرة، مساعدك في عقد إيجار مشروعك.</div>
           <div class="m user">هل يحتوي عقدي على مخاطر؟</div>
           <div class="m bot">لاحظت وجود بند يستحق المراجعة قبل التوقيع: الإيجار يرتفع 7.5% عند كل تجديد، وهذا مثبّت في العقد.</div>
-          <div class="m user">وش أسوي عشان أخفف الخطر؟</div>
-          <div class="m bot">تفاوض على سقف للزيادة قبل التوقيع، وبعدها نحسب أثرها على إيرادك بالأرقام.</div>
         </div>
         <div class="chips"><span>وش أحتاج أجهّز؟</span><span>هل عقدي يتخزن؟</span></div>
         <div class="comp"><div class="snd">➤</div><div class="in">اكتب سؤالك هنا...</div></div>
       </div>
       <div class="home"></div>
+    </div>
+
+    <div class="fcard" style="left: -10px; top: 535px; width: 330px; z-index: 6;">
+      <h4>نسبة الإيجار من إيرادك</h4>
+      <svg class="gauge" viewBox="0 0 250 135">
+        <path d="M25 125 A100 100 0 0 1 90 31" fill="none" stroke="#dc9b97" stroke-width="22"/>
+        <path d="M99 28 A100 100 0 0 1 150 28" fill="none" stroke="#f0cd72" stroke-width="22"/>
+        <path d="M159 31 A100 100 0 0 1 225 125" fill="none" stroke="#86c987" stroke-width="22"/>
+        <circle cx="46" cy="92" r="11" fill="#c8453f" stroke="#ffffff" stroke-width="4"/>
+      </svg>
+      <div class="pct">25<small>%</small></div>
+      <div class="sev">نسبة عالية</div>
+      <div class="sub2"><b>15,000 ريال</b> إيجار شهري من <b>60,000 ريال</b> إيراد شهري</div>
+    </div>
+    <div class="fcard" style="left: 450px; top: 200px; width: 300px; z-index: 6;">
+      <div class="lbl">إجمالي التزام الإيجار</div><div class="big">360,000<small>ريال</small></div><div class="note">على مدى 24 شهر</div>
+    </div>
+    <div class="fcard risk" style="left: 410px; top: 470px; width: 340px; z-index: 6;">
+      <span class="chip">▮▮▯ خطورة عالية</span><h5>الإيجار يأخذ جزء كبير من الإيراد</h5><p>الإيجار ثابت يُدفع كل شهر سواء بعت أو لا.</p>
     </div>
   </div>
   </div>
