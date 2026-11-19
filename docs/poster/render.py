@@ -22,6 +22,9 @@ try:
                     "--window-size=2000,1045", "--virtual-time-budget=20000", "--force-prefers-reduced-motion",
                     f"--screenshot={here / 'basira-poster.png'}", f"http://localhost:{port}/poster.html"],
                    check=True, capture_output=True)
+    subprocess.run([chrome, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", "--virtual-time-budget=20000",
+                    "--force-prefers-reduced-motion", f"--print-to-pdf={here / 'basira-poster.pdf'}",
+                    f"http://localhost:{port}/poster.html"], check=True, capture_output=True)
 finally:
     srv.terminate()
 print("تم:", here / "basira-poster.png")
