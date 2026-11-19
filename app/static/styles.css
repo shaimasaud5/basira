@@ -1094,3 +1094,11 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
 
 /* مثال الصفحة الرئيسية: نافذة التفاصيل بدون «موثّق» وبدون اسم التصنيف */
 .lp-demo .risk-dialog .trust, .lp-demo .risk-dialog .dlg-cat { display: none; }
+
+/* أزرار الهيرو أصغر */
+.lp-cta-row .btn.lg { min-height: 46px; padding: 10px 22px; font-size: 1rem; border-radius: 13px; }
+@media (max-width: 640px) {
+  .lp-cta-row .btn.lg { min-height: 38px; padding: 6px 8px; font-size: .8rem; border-radius: 11px; gap: 5px; }
+  .lp-cta-row .btn.lg .i { width: 13px; height: 13px; }
+}
+@media (max-width: 360px) { .lp-cta-row .btn.lg { font-size: .74rem; padding: 6px 4px; } }
