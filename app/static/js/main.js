@@ -33,7 +33,6 @@ function route() {
   show($("view-landing"), !inApp);
   show($("view-home"), inApp);
   show($("nav-home"), inApp);
-  show($("nav-reset"), inApp);
   show($("lp-nav"), !inApp);
   show($("lp-top-cta"), !inApp);
   closeAssistant();
@@ -97,6 +96,7 @@ async function submit(payload) {
   renderDashboard($("stage-dash"), app.report, app.project, {
     onAsk: (question) => { if (matchMedia("(max-width: 1000px)").matches) openAssistant(); else setTab("chat"); ask(question); },
     onEdit: () => { setStage("input"); },
+    onNew: newAnalysis,
   });
   setStage("dash");
   show($("back-to-report"), true);
@@ -116,7 +116,6 @@ function newAnalysis() {
 
 /* ---------- تشغيل ---------- */
 window.addEventListener("hashchange", route);
-$("nav-reset").addEventListener("click", newAnalysis);
 function setChat(open) {
   $("home-grid").dataset.chat = open ? "open" : "closed";
 }

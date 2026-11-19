@@ -277,7 +277,15 @@ export function renderDashboard(root, report, project, hooks) {
   const edit = el("button", "btn sm", "تعديل البيانات");
   edit.type = "button";
   edit.addEventListener("click", hooks.onEdit);
-  head.append(edit);
+  const actions = el("div", "dash-actions");
+  actions.append(edit);
+  if (hooks.onNew) {
+    const fresh = el("button", "btn sm", "تحليل جديد");
+    fresh.type = "button";
+    fresh.addEventListener("click", hooks.onNew);
+    actions.append(fresh);
+  }
+  head.append(actions);
   root.append(head);
 
   (report.warnings || []).forEach((w) => {

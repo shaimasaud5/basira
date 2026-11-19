@@ -1201,3 +1201,9 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
   .lp-step h3 { font-size: .74rem; white-space: nowrap; letter-spacing: 0; }
 }
 @media (max-width: 350px) { .lp-step h3 { font-size: .64rem; } }
+
+.dash-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.lp-demo .dash-actions { display: none; }
+
+/* الجوال: أزرار فلترة المخاطر تلتف داخل العرض بدل ما تخرج عنه */
+@media (max-width: 640px) { .dsec .filters { flex: 1 1 100%; max-width: 100%; margin-inline-start: 0; } }
