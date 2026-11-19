@@ -7,6 +7,7 @@ import { renderDashboard } from "./dashboard.js";
 import { initProgress } from "./progress.js";
 import { initTheme } from "./theme.js";
 import { mountDemo } from "./demo.js";
+import { initLogoAnim } from "./logo-anim.js";
 
 const STAGES = { input: "stage-input", loading: "stage-loading", dash: "stage-dash" };
 const app = { report: null, project: null };
@@ -131,4 +132,5 @@ initInput({ onSubmit: submit });
 initProgress();
 initTheme();
 initLanding();
+initLogoAnim();
 route();

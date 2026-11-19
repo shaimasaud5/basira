@@ -12,7 +12,7 @@ def test_health():
     assert client.get("/health").json() == {"status": "ok"}
 
 
-JS_MODULES = ["main", "api", "chat", "dashboard", "dom", "input", "progress", "demo"]
+JS_MODULES = ["main", "api", "chat", "dashboard", "dom", "input", "progress", "demo", "logo-anim"]
 
 
 def test_landing_is_arabic_rtl_with_the_chosen_copy():
