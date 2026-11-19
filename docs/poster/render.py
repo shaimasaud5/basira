@@ -11,7 +11,7 @@ tmp = pathlib.Path(tempfile.mkdtemp())
 (tmp / "static").symlink_to(root / "app/static")
 for name in ("poster.html", "demo-embed.html"):
     shutil.copy(here / name, tmp / name)
-for extra in here.glob("*.svg"):
+for extra in list(here.glob("*.svg")) + list(here.glob("tuwaiq-logo.png")):
     shutil.copy(extra, tmp / extra.name)
 
 s = socket.socket(); s.bind(("", 0)); port = s.getsockname()[1]; s.close()
