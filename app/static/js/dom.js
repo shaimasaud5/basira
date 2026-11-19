@@ -21,13 +21,13 @@ export function icon(name, cls = "i") {
   return svg;
 }
 
-const LOGO_PARTS = [["", "frame"], ["t t1", "l1"], ["t t2", "l2"], ["t t3", "l3"], ["hands", "hands"]];
+const LOGO_PARTS = [["", "frame"], ["dotl", "dot"]];
 
 /** شعار بصيرة بطبقاته (للتحريك). */
 export function logoSvg(cls) {
   const svg = document.createElementNS(SVG_NS, "svg");
   svg.setAttribute("class", cls);
-  svg.setAttribute("viewBox", "23 55 491 591");
+  svg.setAttribute("viewBox", "104 206 816 599");
   svg.setAttribute("aria-hidden", "true");
   LOGO_PARTS.forEach(([c, id]) => {
     const use = document.createElementNS(SVG_NS, "use");

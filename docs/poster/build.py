@@ -16,7 +16,7 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
 .poster { position: relative; width: 2000px; height: 1045px; background: radial-gradient(900px 600px at 1450px 300px, var(--glow), transparent 70%), var(--mint); }
 
 /* ---- الجهة اليمنى: الهوية ---- */
-.logo { position:absolute; left: 1275px; top: 45px; width: 290px; height: auto; color: var(--teal); }
+.logo { position:absolute; left: 1230px; top: 70px; width: 440px; height: auto; color: var(--teal); }
 .logo-s { color: var(--brand); height: 34px; width: auto; }
 .word { position:absolute; right: 70px; left: 980px; top: 360px; text-align: center; font-family: "Lalezar", sans-serif; font-size: 330px; line-height: 1.05; color: var(--teal); letter-spacing: 0; }
 .tag { position:absolute; right: 70px; left: 980px; top: 760px; text-align:center; font-weight: 800; font-size: 52px; color: var(--ink); line-height: 1.3; }

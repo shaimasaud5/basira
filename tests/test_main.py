@@ -27,14 +27,14 @@ def test_landing_is_arabic_rtl_with_the_chosen_copy():
 def test_logo_svg_has_separate_animatable_layers():
     r = client.get("/static/logo.svg")
     assert r.status_code == 200 and r.headers["content-type"].startswith("image/svg+xml")
-    for layer in ("frame", "l1", "l2", "l3", "hands"):
+    for layer in ("frame", "dot"):
         assert f'<g id="{layer}">' in r.text
     assert "currentColor" in r.text  # يتبع الثيم (أسود بالفاتح وأبيض بالداكن)
 
 
 def test_landing_background_uses_the_animated_logo_not_the_eye():
     page = client.get("/").text
-    assert 'class="bg-logo"' in page and 'class="hands"' in page and "logo.svg#l1" in page
+    assert 'class="bg-logo"' in page and 'class="dotl"' in page and "logo.svg#dot" in page
     assert "i-lens" not in page and 'class="lens"' not in page
     assert 'rel="icon"' in page and "/static/logo.svg" in page
 
