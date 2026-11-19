@@ -25,6 +25,10 @@ function route() {
 /* ---------- الصفحة الرئيسية: تمرير ناعم للأقسام وظهور تدريجي هادي ---------- */
 function initLanding() {
   mountDemo($("lp-demo"));
+  // فقاعة «اسأل بصيرة»: تظهر مرة وحدة بعد ثانيتين وتختفي بعد خمس ثوانٍ
+  const ask = $("lp-ask");
+  setTimeout(() => ask.classList.add("peek"), 2000);
+  setTimeout(() => ask.classList.remove("peek"), 7000);
   document.querySelectorAll("[data-scroll]").forEach((link) => {
     link.addEventListener("click", (ev) => {
       const target = document.getElementById(link.dataset.scroll);

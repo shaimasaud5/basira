@@ -1111,3 +1111,11 @@ dialog.risk-dialog::backdrop { background: rgba(0,0,0,.55); backdrop-filter: blu
   #features .lp-feat h3 { margin: 16px 0 8px; }
 }
 @media (max-width: 960px) { .lp-hero-grid { row-gap: 50px; } }
+
+/* أيقونة «اسأل بصيرة» الثابتة في الصفحة الرئيسية */
+.lp-ask { position: fixed; left: 16px; bottom: 18px; z-index: 30; display: flex; align-items: center; gap: 10px; flex-direction: row; direction: ltr; text-decoration: none; }
+.lp-ask-btn { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--brand); color: var(--on-brand); box-shadow: 0 8px 22px color-mix(in srgb, var(--brand) 35%, transparent); transition: transform .2s ease; }
+.lp-ask-btn svg { width: 24px; height: 24px; }
+.lp-ask:hover .lp-ask-btn { transform: translateY(-2px); }
+.lp-ask-bubble { order: 2; direction: rtl; background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); border-radius: 14px; border-end-start-radius: 4px; padding: 8px 14px; font-weight: 700; font-size: .9rem; white-space: nowrap; box-shadow: 0 8px 22px rgba(0,0,0,.18); opacity: 0; transform: translateX(-8px) scale(.96); pointer-events: none; transition: opacity .4s ease, transform .4s ease; }
+.lp-ask.peek .lp-ask-bubble, .lp-ask:hover .lp-ask-bubble, .lp-ask:focus-visible .lp-ask-bubble { opacity: 1; transform: none; }
