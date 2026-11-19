@@ -66,6 +66,10 @@ def _call(system: str, user: str, base: str, key: str, model: str, json_mode: bo
     }
     if json_mode:
         body["response_format"] = {"type": "json_object"}
+    effort = os.environ.get("LLM_REASONING_EFFORT", "").strip()
+    if effort and "gpt-oss" in model:
+        # اختياري: "low" أسرع بحوالي النصف لكنه جرّبناه وأسقط بنودًا (اقتباس غير حرفي، أو الإيجار)، فالافتراضي بدونه
+        body["reasoning_effort"] = effort
     try:
         r = httpx.post(
             f"{base}/chat/completions",

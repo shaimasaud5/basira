@@ -174,11 +174,9 @@ function levelBars(severity) {
 function riskCard(card, isAi, openDetail) {
   const box = el("article", `rcard sev-${card.severity}`);
   const top = el("div", "rc-top");
-  const ico = el("span", "sev-ico");
-  ico.append(icon(card.severity));
   const word = el("span", "sev-chip");
   word.append(levelBars(card.severity), document.createTextNode(`خطورة ${SEV_LABEL[card.severity] || card.severity}`));
-  top.append(ico, word);
+  top.append(word);
   top.append(el("span", "pill cat", CATEGORY[card.category] || card.category));
 
   const more = el("button", "rc-more");
