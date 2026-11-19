@@ -3,7 +3,7 @@
 <title>بوستر بصِيـــرة</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Lalezar&display=swap" rel="stylesheet">
 <style>
-:root { --teal:#0284c7; --ink:#14201e; --mint:#e6f3fb; --glow:#f3faff; --bg:#0d0d0d; --surface:#1a1a19; --surface2:#222221; --line:#2c2c2a; --ink-d:#f0efec; --ink2:#c3c2b7; --ink3:#9a9890; --brand:#7dd3fc; --onbrand:#06202f; }
+:root { --teal:#0284c7; --ink:#14201e; --mint:#e6f3fb; --glow:#f3faff; --bg:#eceef1; --surface:#ffffff; --surface2:#f4f5f7; --line:#dadde2; --ink-d:#14201e; --ink2:#4a5560; --ink3:#7a858f; --brand:#0284c7; --onbrand:#ffffff; }
 * { box-sizing: border-box; margin:0; padding:0; }
 html, body { width: 2000px; height: 1045px; background: var(--mint); font-family: "Tajawal", sans-serif; overflow: hidden; }
 .poster { position: relative; width: 2000px; height: 1045px; background: radial-gradient(900px 600px at 1450px 300px, var(--glow), transparent 70%), var(--mint); }
@@ -16,14 +16,14 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
 .sub { position:absolute; right: 70px; left: 980px; top: 925px; text-align:center; white-space: nowrap; font-weight: 500; font-size: 29px; color: #5b6b68; line-height: 1.5; }
 
 /* ---- الجوالات ---- */
-.phone { position:absolute; width: 400px; height: 820px; border-radius: 62px; background: #17191e; padding: 14px; box-shadow: 0 30px 60px rgba(20,40,38,.22), 0 0 0 2px #2b2f36 inset; }
+.phone { position:absolute; width: 400px; height: 820px; border-radius: 62px; background: #d6dadf; padding: 14px; box-shadow: 0 30px 60px rgba(20,40,60,.18), 0 0 0 2px #c3c8ce inset; }
 .phone .scr { position:relative; width:100%; height:100%; border-radius: 50px; overflow:hidden; background: var(--bg); color: var(--ink-d); direction: rtl; }
 .island { position:absolute; top: 14px; left: 50%; transform: translateX(-50%); width: 120px; height: 34px; border-radius: 20px; background:#000; z-index: 5; }
 .status { position:absolute; top: 18px; left: 30px; right: 30px; display:flex; justify-content: space-between; font-size: 17px; font-weight: 700; direction: ltr; z-index: 4; }
 .bar { position:absolute; top: 62px; left:0; right:0; height: 58px; display:flex; align-items:center; gap: 10px; padding: 0 22px; border-bottom: 1px solid var(--line); }
 .bar .nm { font-family: "Lalezar", sans-serif; font-size: 30px; color: var(--brand); line-height: 1; }
 .body { position:absolute; top: 134px; left: 18px; right: 18px; bottom: 18px; display:flex; flex-direction: column; gap: 12px; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 16px 18px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 16px 18px; box-shadow: 0 2px 8px rgba(20,40,60,.06); }
 .card h4 { font-size: 15px; font-weight: 700; color: var(--ink2); text-align:center; margin-bottom: 4px; }
 .big { font-size: 40px; font-weight: 800; line-height: 1.1; }
 .big small { font-size: 17px; font-weight: 600; color: var(--ink2); margin-inline-start: 6px; }
@@ -35,7 +35,7 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
 .sev { text-align:center; font-size: 16px; font-weight: 700; margin: 6px 0 4px; color: var(--ink-d); }
 .sub2 { text-align:center; font-size: 14px; color: var(--ink2); }
 .risk { border-inline-start: 5px solid #c0524a; }
-.risk .chip { display:inline-flex; gap:8px; align-items:center; font-size: 14px; font-weight: 700; color:#e08a82; }
+.risk .chip { display:inline-flex; gap:8px; align-items:center; font-size: 14px; font-weight: 700; color:#b8443d; }
 .risk h5 { font-size: 20px; font-weight: 800; margin: 6px 0 4px; line-height: 1.4; }
 .risk p { font-size: 14px; color: var(--ink2); line-height: 1.7; }
 
@@ -51,7 +51,7 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
 .comp .snd { width: 38px; height: 38px; border-radius: 50%; background: var(--brand); display:grid; place-items:center; color: var(--onbrand); }
 .dot { width:8px; height:8px; border-radius:50%; background:#5fd07f; display:inline-block; margin-inline-end:6px; }
 .hsub { font-size: 13px; color: var(--ink2); }
-.home { position:absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; border-radius: 3px; background: #ddd; opacity:.8; }
+.home { position:absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; border-radius: 3px; background: #9aa1a9; opacity:.8; }
 </style></head><body>
 <div class="poster">
 
@@ -86,10 +86,10 @@ html, body { width: 2000px; height: 1045px; background: var(--mint); font-family
         <div class="card">
           <h4>نسبة الإيجار من إيرادك</h4>
           <svg class="gauge" viewBox="0 0 250 135">
-            <path d="M25 125 A100 100 0 0 1 90 31" fill="none" stroke="#8c3b3b" stroke-width="22"/>
-            <path d="M99 28 A100 100 0 0 1 150 28" fill="none" stroke="#b4903a" stroke-width="22"/>
-            <path d="M159 31 A100 100 0 0 1 225 125" fill="none" stroke="#3a7d3a" stroke-width="22"/>
-            <circle cx="46" cy="92" r="11" fill="#c8453f" stroke="#1a1a19" stroke-width="4"/>
+            <path d="M25 125 A100 100 0 0 1 90 31" fill="none" stroke="#dc9b97" stroke-width="22"/>
+            <path d="M99 28 A100 100 0 0 1 150 28" fill="none" stroke="#f0cd72" stroke-width="22"/>
+            <path d="M159 31 A100 100 0 0 1 225 125" fill="none" stroke="#86c987" stroke-width="22"/>
+            <circle cx="46" cy="92" r="11" fill="#c8453f" stroke="#ffffff" stroke-width="4"/>
           </svg>
           <div class="pct">25<small>%</small></div>
           <div class="sev">نسبة عالية</div>
